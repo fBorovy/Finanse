@@ -7,6 +7,6 @@ val Purple500 = Color(0xFF6200EE)
 val Purple700 = Color(0xFF3700B3)
 val Teal200 = Color(0xFF03DAC5)
 
-val Background = Color(0xFF332334)
+val Background = Color(0xFF000043)
 val Aqua = Color(0xFF00BBBB)
-val TextWhite = Color(0xFFDDDDDD)
+val TextWhite = Color(0xFFCCCCCC)

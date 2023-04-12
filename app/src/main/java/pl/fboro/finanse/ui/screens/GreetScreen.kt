@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import org.intellij.lang.annotations.Language
 import pl.fboro.finanse.Screen
 import pl.fboro.finanse.greeting
 import pl.fboro.finanse.polish
@@ -26,8 +27,7 @@ import pl.fboro.finanse.ui.theme.Background
 import pl.fboro.finanse.ui.theme.TextWhite
 
 @Composable
-fun GreetScreen(navController: NavController) {
-    var language by remember{ mutableStateOf(polish) }
+fun GreetScreen(navController: NavController, language: Int) {
 
     Box(
         modifier = Modifier
@@ -49,9 +49,9 @@ fun GreetScreen(navController: NavController) {
             contentAlignment = Center
         ) {
             Text(
-                text = greeting[polish],
+                text = greeting[language],
                 fontSize = 40.sp,
-                color = TextWhite,
+                color = Background,
             )
         }
 
