@@ -1,17 +1,16 @@
 package pl.fboro.finanse.viewModels
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import pl.fboro.finanse.database.*
+import pl.fboro.finanse.spending
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ActivityViewModel(
     private val dao: ActivityDao,
-    private val activityType: Int
 ): ViewModel() {
 
     private val _sortType = MutableStateFlow(SortType.YEAR_MONTH_DAY)
@@ -19,12 +18,14 @@ class ActivityViewModel(
         .flatMapLatest { sortType ->
             when(sortType){
                 SortType.YEAR_MONTH_DAY -> {
-                    if (activityType == 0) dao.getSpendingsOrderedByDate()
-                    else dao.getIncomesOrderedByDate()
+//                    if (activityType == 0) dao.getSpendingsOrderedByDate()
+//                    else dao.getIncomesOrderedByDate()
+                    dao.getSpendingsOrderedByDate()
                 }
                 SortType.AMOUNT -> {
-                    if (activityType == 0) dao.getSpendingsOrderedByAmount()
-                    else dao.getIncomesOrderedByAmount()
+//                    if (activityType == 0) dao.getSpendingsOrderedByAmount()
+//                    else dao.getIncomesOrderedByAmount()
+                    dao.getSpendingsOrderedByAmount()
                 }
             }
         }
@@ -38,17 +39,17 @@ class ActivityViewModel(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ActivityState())
 
 
-    fun onEvent(event: ActivityEvent, activityType: Int) {
+    fun onEvent(event: ActivityEvent) {
         when(event) {
             is ActivityEvent.DeleteActivity -> {
                 viewModelScope.launch {
                     dao.deleteActivity(event.activity)
                 }
             }
-            ActivityEvent.HideDialog -> _state.update { it.copy(
+            ActivityEvent.HideAddingDialog -> _state.update { it.copy(
                 isAddingActivity = false
             ) }
-            ActivityEvent.SaveActivity -> {
+            is ActivityEvent.SaveActivity -> {
                 val day = state.value.day
                 val month = state.value.month
                 val year = state.value.year
@@ -68,7 +69,7 @@ class ActivityViewModel(
                     amount = amount,
                     title = title,
                     source = source,
-                    type = activityType
+                    type = spending,
                 )
                 viewModelScope.launch {
                     dao.upsertActivity(activity)
@@ -83,43 +84,43 @@ class ActivityViewModel(
                     source = ' ',
                 )}
             }
-            ActivityEvent.ShowDialog -> _state.update { it.copy(
+            ActivityEvent.ShowAddingDialog -> _state.update { it.copy(
                 isAddingActivity = true
             ) }
             is ActivityEvent.SortActivities -> {
                 _sortType.value = event.sortType
             }
-            is ActivityEvent.setAmount -> {
+            is ActivityEvent.SetAmount -> {
                 _state.update { it.copy(
                     amount = event.amount
                 ) }
             }
-            is ActivityEvent.setDay -> {
+            is ActivityEvent.SetDay -> {
                 _state.update { it.copy(
                     day = event.day
                 ) }
             }
-            is ActivityEvent.setMonth -> {
+            is ActivityEvent.SetMonth -> {
                 _state.update { it.copy(
                     month = event.month
                 ) }
             }
-            is ActivityEvent.setSource -> {
+            is ActivityEvent.SetSource -> {
                 _state.update { it.copy(
                     source = event.source
                 ) }
             }
-            is ActivityEvent.setTitle -> {
+            is ActivityEvent.SetTitle -> {
                 _state.update { it.copy(
                     title = event.title
                 ) }
             }
-            is ActivityEvent.setType -> {
+            is ActivityEvent.SetType -> {
                 _state.update { it.copy(
                     type = event.type
                 ) }
             }
-            is ActivityEvent.setYear -> {
+            is ActivityEvent.SetYear -> {
                 _state.update { it.copy(
                     year = event.year
                 ) }

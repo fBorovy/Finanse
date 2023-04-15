@@ -9,4 +9,5 @@ val Teal200 = Color(0xFF03DAC5)
 
 val Background = Color(0xFF000043)
 val Aqua = Color(0xFF00BBBB)
-val TextWhite = Color(0xFFCCCCCC)
+val LightAqua = Color(0xFF00CCCC)
+val TextWhite = Color(0xFFBBBBBB)
