@@ -4,20 +4,20 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pl.fboro.finanse.*
 import pl.fboro.finanse.database.ActivityEvent
 import pl.fboro.finanse.database.ActivityState
-import pl.fboro.finanse.ui.theme.Aqua
-import pl.fboro.finanse.ui.theme.Background
-import pl.fboro.finanse.ui.theme.LightAqua
-import pl.fboro.finanse.ui.theme.TextWhite
+import pl.fboro.finanse.ui.theme.*
 
 @Composable
 fun AddActivityDialog(
@@ -31,6 +31,10 @@ fun AddActivityDialog(
     else addIncomeDialogTitle[language]
 
     var source by remember { mutableStateOf('R') }
+    var day by remember { mutableStateOf("$currentDay") }
+    var month by remember { mutableStateOf("$currentMonth") }
+    var year by remember { mutableStateOf("$currentYear") }
+    var amount by remember { mutableStateOf(" ")}
 
 
     AlertDialog(
@@ -44,49 +48,64 @@ fun AddActivityDialog(
         title = { Text(text = title, color = TextWhite) },
         text = {
            Column {
-               //Row(){
-                   OutlinedTextField(
-                       value = state.day.toString(),
-                       colors = TextFieldDefaults.outlinedTextFieldColors(
-                           focusedBorderColor = LightAqua,
-                           unfocusedBorderColor = Aqua,
-                           textColor = TextWhite),
-                       onValueChange = {
-                           onEvent(ActivityEvent.SetDay(10))
-                       },
-                       label = {Text(text = dayPlaceHolder[language], color = TextWhite)},
-                   )
-                   OutlinedTextField(
-                       value = state.month.toString(),
-                       colors = TextFieldDefaults.outlinedTextFieldColors(
-                           focusedBorderColor = LightAqua,
-                           unfocusedBorderColor = Aqua,
-                           textColor = TextWhite),
-                       onValueChange = {
-                           onEvent(ActivityEvent.SetMonth(10))
-                       },
-                       label = {Text(text = monthPlaceHolder[language], color = TextWhite)},
-                   )
                OutlinedTextField(
-                   value = state.year.toString(),
+                   value = day,
                    colors = TextFieldDefaults.outlinedTextFieldColors(
                        focusedBorderColor = LightAqua,
                        unfocusedBorderColor = Aqua,
                        textColor = TextWhite),
                    onValueChange = {
-                       onEvent(ActivityEvent.SetYear(10))
+                       day = it
                    },
+                   keyboardOptions = KeyboardOptions(
+                       keyboardType = KeyboardType.Number,
+                       imeAction = ImeAction.Next,
+                   ),
+                   label = {Text(text = dayPlaceHolder[language], color = TextWhite)},
+               )
+               OutlinedTextField(
+                   value = month,
+                   colors = TextFieldDefaults.outlinedTextFieldColors(
+                       focusedBorderColor = LightAqua,
+                       unfocusedBorderColor = Aqua,
+                       textColor = TextWhite),
+                   onValueChange = {
+                       month = it
+                   },
+                   keyboardOptions = KeyboardOptions(
+                       keyboardType = KeyboardType.Number,
+                       imeAction = ImeAction.Next,
+                   ),
+                   label = {Text(text = monthPlaceHolder[language], color = TextWhite)},
+               )
+               OutlinedTextField(
+                   value = year,
+                   colors = TextFieldDefaults.outlinedTextFieldColors(
+                       focusedBorderColor = LightAqua,
+                       unfocusedBorderColor = Aqua,
+                       textColor = TextWhite),
+                   onValueChange = {
+                       year = it
+                   },
+                   keyboardOptions = KeyboardOptions(
+                       keyboardType = KeyboardType.Number,
+                       imeAction = ImeAction.Next,
+                   ),
                    label = {Text(text = yearPlaceHolder[language], color = TextWhite)},
                )
                OutlinedTextField(
-                   value = state.amount.toString(),
+                   value = amount,
                    colors = TextFieldDefaults.outlinedTextFieldColors(
                        focusedBorderColor = LightAqua,
                        unfocusedBorderColor = Aqua,
                        textColor = TextWhite),
                    onValueChange = {
-                       onEvent(ActivityEvent.SetAmount(10.0))
+                       amount = it
                    },
+                   keyboardOptions = KeyboardOptions(
+                       keyboardType = KeyboardType.Number,
+                       imeAction = ImeAction.Next,
+                   ),
                    label = {Text(text = amountPlaceHolder[language], color = TextWhite)},
                )
                OutlinedTextField(
@@ -98,50 +117,53 @@ fun AddActivityDialog(
                    onValueChange = {
                        onEvent(ActivityEvent.SetTitle(it))
                    },
+                   keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                    label = {Text(text = titlePlaceHolder[language], color = TextWhite)},
                )
                Row(
                    verticalAlignment = Alignment.CenterVertically,
                    horizontalArrangement = Arrangement.SpaceEvenly,
-                   modifier = modifier.fillMaxWidth().padding(top = 8.dp)
+                   modifier = modifier
+                       .fillMaxWidth()
+                       .padding(top = 8.dp)
                ) {
                    Box(
                        modifier = Modifier
-                           .border(1.dp, Aqua)
-                           .padding(5.dp)
-                           .clickable{
+                           .border(1.dp, Aqua, RoundedCornerShape(10.dp))
+                           .padding(vertical = 5.dp, horizontal = 15.dp)
+                           .clickable {
                                source = 'R'
                            }
                    ){
                        Text(
                            text = "Revolut",
-                           color = if (source == 'R') Aqua else TextWhite,
+                           color = if (source == 'R') Aqua else TextGray,
                        )
                    }
                    Box(
                        modifier = Modifier
-                           .border(1.dp, Aqua)
-                           .padding(5.dp)
-                           .clickable{
+                           .border(1.dp, Aqua, RoundedCornerShape(10.dp))
+                           .padding(vertical = 5.dp, horizontal = 15.dp)
+                           .clickable {
                                source = 'G'
                            }
                    ) {
                        Text(
                            text = "Gotówka",
-                           color = if (source == 'G') Aqua else TextWhite,
+                           color = if (source == 'G') Aqua else TextGray,
                        )
                    }
                    Box(
                        modifier = Modifier
-                           .border(1.dp, Aqua)
-                           .padding(5.dp)
-                           .clickable{
+                           .border(1.dp, Aqua, RoundedCornerShape(10.dp))
+                           .padding(vertical = 5.dp, horizontal = 15.dp)
+                           .clickable {
                                source = 'B'
                            }
                    ) {
                        Text(
                            text = "Bank",
-                           color = if (source == 'B') Aqua else TextWhite,
+                           color = if (source == 'B') Aqua else TextGray,
                        )
                    }
                }
@@ -156,10 +178,12 @@ fun AddActivityDialog(
                 Box(
                     modifier = Modifier
                         .weight(1f)
+                        .padding(start = 30.dp, end = 15.dp,)
                         .clickable {
                             onEvent(ActivityEvent.HideAddingDialog)
                         }
-                        .border(1.dp, Aqua),
+                        .border(1.dp, Aqua, RoundedCornerShape(10.dp))
+                        .padding(vertical = 5.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -169,10 +193,23 @@ fun AddActivityDialog(
                 Box(
                     modifier = Modifier
                         .weight(1f)
+                        .padding(start = 15.dp, end = 30.dp)
                         .clickable {
+                            onEvent(ActivityEvent.SetDay(day.toInt()))
+                            onEvent(ActivityEvent.SetMonth(month.toInt()))
+                            onEvent(ActivityEvent.SetYear(year.toInt()))
+                            onEvent(ActivityEvent.SetAmount(amount.toDouble()))
+                            when (source) {
+                                'R' -> onEvent(ActivityEvent.SetSource('R'))
+                                'G' -> onEvent(ActivityEvent.SetSource('G'))
+                                'B' -> onEvent(ActivityEvent.SetSource('B'))
+                            }
+                            if (activityType == spending) onEvent(ActivityEvent.SetType(spending))
+                            else onEvent(ActivityEvent.SetType(income))
                             onEvent(ActivityEvent.SaveActivity)
                         }
-                        .border(1.dp, Aqua),
+                        .border(1.dp, Aqua, RoundedCornerShape(10.dp))
+                        .padding(vertical = 5.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(

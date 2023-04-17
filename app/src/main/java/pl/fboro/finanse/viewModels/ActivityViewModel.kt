@@ -5,6 +5,9 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import pl.fboro.finanse.currentDay
+import pl.fboro.finanse.currentMonth
+import pl.fboro.finanse.currentYear
 import pl.fboro.finanse.database.*
 import pl.fboro.finanse.spending
 
@@ -13,6 +16,7 @@ class ActivityViewModel(
     private val dao: ActivityDao,
 ): ViewModel() {
 
+    private val _years = dao.getYearsRange()
     private val _sortType = MutableStateFlow(SortType.YEAR_MONTH_DAY)
     private val _activities = _sortType
         .flatMapLatest { sortType ->
@@ -31,16 +35,22 @@ class ActivityViewModel(
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
     private val _state = MutableStateFlow(ActivityState())
-    val state = combine(_state, _sortType, _activities) { state, sortType, activities ->
+    val state = combine(_state, _sortType, _activities, _years) { state, sortType, activities, years ->
         state.copy(
             activities = activities,
             sortType = sortType,
+            years = years,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ActivityState())
 
 
     fun onEvent(event: ActivityEvent) {
         when(event) {
+//            is ActivityEvent.SetYears -> {
+//                _state.update { it.copy(
+//                    years = dao.getYearsRange()
+//                ) }
+//            }
             is ActivityEvent.DeleteActivity -> {
                 viewModelScope.launch {
                     dao.deleteActivity(event.activity)
@@ -57,8 +67,7 @@ class ActivityViewModel(
                 val title = state.value.title
                 val source = state.value.source
 
-                if (day == 0 || month == 0 || year == 0 || amount == 0.0 || title.isBlank() ||
-                        source.isWhitespace()){
+                if (day == 0 || month == 0 || year == 0 || amount == 0.0 || title.isBlank()){
                     return
                 }
 
@@ -76,12 +85,12 @@ class ActivityViewModel(
                 }
                 _state.update { it.copy(
                     isAddingActivity = false,
-                    day = 0,
-                    month = 0,
-                    year = 0,
+                    day = currentDay,
+                    month = currentMonth,
+                    year = currentYear,
                     amount = 0.0,
                     title = "",
-                    source = ' ',
+                    source = 'R',
                 )}
             }
             ActivityEvent.ShowAddingDialog -> _state.update { it.copy(
@@ -125,7 +134,6 @@ class ActivityViewModel(
                     year = event.year
                 ) }
             }
-
         }
     }
 }

@@ -4,10 +4,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
@@ -38,6 +35,8 @@ fun SpendingContent(
     language: Int
 ) {
     var chosenSortType by remember{ mutableStateOf(0) }
+    var isDropDownVisible by remember { mutableStateOf(false) }
+    var chosenYear by remember { mutableStateOf(2023) }
 
     Scaffold(
         modifier = Modifier
@@ -78,7 +77,7 @@ fun SpendingContent(
                             .clickable {
                                 onEvent(ActivityEvent.SortActivities(sortType = SortType.AMOUNT))
                                 chosenSortType = 1
-                            }
+                            },
                     )
                 }
                 Box(
@@ -103,10 +102,29 @@ fun SpendingContent(
                     contentAlignment = Alignment.CenterEnd
                 ) {
                     Text(
-                        text = "2023",
+                        "$currentYear",
                         style = Typography.h2,
-                        textAlign = TextAlign.End
+                        modifier = Modifier
+                            .clickable{
+                                isDropDownVisible = !isDropDownVisible
+                            }
                     )
+                    DropdownMenu(
+                        expanded = isDropDownVisible,
+                        onDismissRequest = { isDropDownVisible = false }
+                    ) {
+                        state.years.forEach {
+                            DropdownMenuItem(onClick = {
+                                chosenYear = it
+                                isDropDownVisible = false
+                            }) {
+                                Text(
+                                    "$it",
+                                    style = Typography.h2,
+                                )
+                            }
+                        }
+                    }
                 }
             }
             if(state.isAddingActivity) {
@@ -121,6 +139,7 @@ fun SpendingContent(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(top = 30.dp)
                     .horizontalScroll(rememberScrollState()),
             ) {
                 items(state.activities) { activity ->
@@ -134,10 +153,16 @@ fun SpendingContent(
                                 }
                             )
                     ) {
-                        Text("${activity.day}.${activity.month}: " +
-                                "${activity.amount} ${activity.title}" )
+                        Text(text =
+                                if (activity.month < 10) {"${activity.day}.0${activity.month}: " +
+                                "${activity.amount} ${activity.title}"}
+                                else {"${activity.day}.${activity.month}: " +
+                                        "${activity.amount} ${activity.title}"},
+                            style = Typography.body1
+                        )
                         Text(
-                            "${activity.source}",
+                            " ${activity.source}",
+                            style = Typography.body1,
                             color = when(activity.source) {
                                 'R' -> Color.Blue
                                 'G' -> Color.Red

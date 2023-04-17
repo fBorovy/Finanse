@@ -38,9 +38,3 @@ val currentMonth = calendar.get(Calendar.MONTH) + 1
 val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
 //val currentDate = Date(year, month, day)
 
-enum class Source{
-    R,
-    G,
-    B,
-}
-

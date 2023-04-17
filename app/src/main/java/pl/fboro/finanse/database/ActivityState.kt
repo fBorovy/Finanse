@@ -1,10 +1,9 @@
 package pl.fboro.finanse.database
 
-import androidx.compose.runtime.*
 import pl.fboro.finanse.currentDay
 import pl.fboro.finanse.currentMonth
 import pl.fboro.finanse.currentYear
-import java.time.LocalDate
+
 
 data class ActivityState(
 
@@ -17,7 +16,8 @@ data class ActivityState(
     val source: Char = 'R',
     val type: Int = 0,
     val isAddingActivity: Boolean = false,
-    val sortType: SortType = SortType.YEAR_MONTH_DAY
+    val sortType: SortType = SortType.YEAR_MONTH_DAY,
+    val years: List<Int> = listOf(currentYear)
 )
 
 
