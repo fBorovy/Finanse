@@ -11,8 +11,6 @@ import androidx.room.Room
 import pl.fboro.finanse.database.ActivityDatabase
 import pl.fboro.finanse.ui.theme.FinanseTheme
 import pl.fboro.finanse.viewModels.ActivityViewModel
-import java.time.LocalDate
-import java.time.LocalTime
 
 class MainActivity : ComponentActivity() {
 
@@ -21,7 +19,7 @@ class MainActivity : ComponentActivity() {
             applicationContext,
             ActivityDatabase::class.java,
             "activities.db",
-        ).build()
+        ).addMigrations(ActivityDatabase.migration1To2).build()
     }
 
     private val viewModel by viewModels<ActivityViewModel>(
@@ -43,17 +41,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-
-//@Composable
-//fun DateTest() {
-//    var pickedDate by remember {
-//        mutableStateOf(LocalDate.now())
-//    }
-//    var pickedTime by remember {
-//        mutableStateOf(LocalTime.NOON)
-//    }
-//    val formattedTime by remember{
-//        derivedStateOf
-//    }
-//}

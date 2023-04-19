@@ -4,20 +4,16 @@ import pl.fboro.finanse.currentDay
 import pl.fboro.finanse.currentMonth
 import pl.fboro.finanse.currentYear
 
+data class InvestmentState(
 
-data class ActivityState(
-
-    val activities: List<Activity> = emptyList(),
+    val investments: List<Investment>,
     val day: Int = currentDay,
     val month: Int = currentMonth,
     val year: Int = currentYear,
-    val amount: Double = 0.0,
-    val title: String = " ",
-    val source: Char = 'R',
-    val type: Int = 0,
+    val investedIn: Double = 0.0,
+    val takenOut: Double = 0.0,
+    val difference: Double = 0.0,
     val isAddingActivity: Boolean = false,
-    val sortType: SortType = SortType.SPENDING_YEAR_MONTH_DAY,
+    val sortType: InvestmentSortType = InvestmentSortType.DATE,
     val years: List<Int> = listOf(currentYear),
 )
-
-

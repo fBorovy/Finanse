@@ -20,4 +20,18 @@ sealed interface ActivityEvent{
 
     data class SortActivities(val sortType: SortType): ActivityEvent
     data class DeleteActivity(val activity: Activity): ActivityEvent
+
+    object SaveInvestment: ActivityEvent
+    data class SetIDay(val day: Int): ActivityEvent
+    data class SetIMonth(val month: Int): ActivityEvent
+    data class SetIYear(val year: Int): ActivityEvent
+    data class SetInvestedIn(val amount: Double): ActivityEvent
+    data class SetTakenOut(val amount: Double): ActivityEvent
+    data class SetDifference(val amount: Double): ActivityEvent
+
+    object ShowAddingInvestmentDialog: ActivityEvent
+    object ShowEditDeleteInvestmentDialog: ActivityEvent
+
+    object HideAddingInvestmentDialog: ActivityEvent
+    object HideEditDeleteInvestmentDialog: ActivityEvent
 }

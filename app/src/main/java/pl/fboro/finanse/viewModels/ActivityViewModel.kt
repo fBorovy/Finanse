@@ -120,6 +120,21 @@ class ActivityViewModel(
                     year = event.year
                 ) }
             }
+//            is ActivityEvent.SaveInvestment -> {
+//
+//            }
+//            ActivityEvent.HideAddingInvestmentDialog -> TODO()
+//            ActivityEvent.HideEditDeleteDialog -> TODO()
+//            ActivityEvent.HideEditDeleteInvestmentDialog -> TODO()
+//            is ActivityEvent.SetDifference -> TODO()
+//            is ActivityEvent.SetIDay -> TODO()
+//            is ActivityEvent.SetIMonth -> TODO()
+//            is ActivityEvent.SetIYear -> TODO()
+//            is ActivityEvent.SetInvestedIn -> TODO()
+//            is ActivityEvent.SetTakenOut -> TODO()
+//            ActivityEvent.ShowAddingInvestmentDialog -> TODO()
+//            ActivityEvent.ShowEditDeleteDialog -> TODO()
+//            ActivityEvent.ShowEditDeleteInvestmentDialog -> TODO()
         }
     }
 }

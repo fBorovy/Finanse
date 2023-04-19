@@ -10,7 +10,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import pl.fboro.finanse.database.ActivityEvent
 import pl.fboro.finanse.database.ActivityState
-import pl.fboro.finanse.database.SortType
 import pl.fboro.finanse.income
 import pl.fboro.finanse.spending
 import pl.fboro.finanse.ui.screens.mainScreen.OptionsBar
@@ -53,7 +52,7 @@ fun MainScreen(
                 activityType = chosenActivity,
             )
         }
-        else {}
+        else {}//InvestmentsContent()
 
     }
 }

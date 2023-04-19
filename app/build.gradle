@@ -19,15 +19,13 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
-    }
 
-//    tasks.withType(KotlinCompile).configureEach {
-//        kotlinOptions {
-//            freeCompilerArgs += [
-//                    "-Xjvm-default=all",
-//            ]
-//        }
-//    }
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas")
+            }
+        }
+    }
 
     buildTypes {
         release {
@@ -35,6 +33,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -78,6 +77,6 @@ dependencies {
     implementation 'androidx.room:room-ktx:2.5.1'
     kapt "androidx.room:room-compiler:2.5.1"
 
-    //date
-    //implementation "io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc"
+    androidTestImplementation 'androidx.room:room-testing:2.5.1'
+    androidTestImplementation "com.google.truth:truth:1.1.3"
 }

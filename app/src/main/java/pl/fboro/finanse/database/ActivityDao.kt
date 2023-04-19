@@ -29,4 +29,19 @@ interface ActivityDao {
 
     @Query("Select * FROM Activity WHERE type == 1 ORDER BY amount DESC")
     fun getIncomesOrderedByAmount(): Flow<List<Activity>>
+
+    @Upsert
+    suspend fun upsertInvestment(investment: Investment)
+
+    @Delete
+    suspend fun deleteInvestment(investment: Investment)
+
+    @Query("SELECT DISTINCT year FROM Investment")
+    fun getInvestmentYearsRange(): Flow<List<Int>>
+
+    @Query("SELECT * FROM Investment ORDER BY year DESC, month DESC, day DESC")
+    fun getInvestmentsOrderedByTime(): Flow<List<Investment>>
+
+    @Query("SELECT * FROM Investment ORDER BY difference DESC")
+    fun getInvestmentsOrderedByProfitAmount(): Flow<List<Investment>>
 }

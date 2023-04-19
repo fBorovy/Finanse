@@ -6,3 +6,7 @@ enum class SortType {
     INCOME_YEAR_MONTH_DAY,
     INCOME_AMOUNT,
 }
+enum class InvestmentSortType {
+    DATE,
+    PROFIT,
+}
