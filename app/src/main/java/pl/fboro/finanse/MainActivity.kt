@@ -23,6 +23,7 @@ class MainActivity : ComponentActivity() {
             "activities.db",
         ).build()
     }
+
     private val viewModel by viewModels<ActivityViewModel>(
         factoryProducer = {
             object: ViewModelProvider.Factory {

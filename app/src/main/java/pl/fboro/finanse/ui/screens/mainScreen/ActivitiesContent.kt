@@ -4,6 +4,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -12,10 +13,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import pl.fboro.finanse.*
 import pl.fboro.finanse.R
@@ -29,18 +30,19 @@ import pl.fboro.finanse.ui.theme.Typography
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SpendingContent(
+fun ActivitiesContent(
     state: ActivityState,
     onEvent: (ActivityEvent) -> Unit,
-    language: Int
+    language: Int,
+    activityType: Int,
 ) {
     var chosenSortType by remember{ mutableStateOf(0) }
     var isDropDownVisible by remember { mutableStateOf(false) }
-    var chosenYear by remember { mutableStateOf(2023) }
+    var chosenYear by remember { mutableStateOf(currentYear) }
 
     Scaffold(
         modifier = Modifier
-            .padding(top = 5.dp),
+            .padding(top = 10.dp),
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 onEvent(ActivityEvent.ShowAddingDialog)
@@ -73,9 +75,14 @@ fun SpendingContent(
                         colorFilter = if (chosenSortType == 1) ColorFilter.tint(LightAqua)
                         else ColorFilter.tint(Aqua),
                         modifier = Modifier
-                            .size(25.dp)
+                            .size(30.dp)
                             .clickable {
-                                onEvent(ActivityEvent.SortActivities(sortType = SortType.AMOUNT))
+                                onEvent(
+                                    ActivityEvent.SortActivities(
+                                        sortType = if (activityType == spending) SortType.SPENDING_AMOUNT
+                                                    else SortType.INCOME_AMOUNT
+                                    )
+                                )
                                 chosenSortType = 1
                             },
                     )
@@ -89,20 +96,25 @@ fun SpendingContent(
                         colorFilter = if (chosenSortType == 0) ColorFilter.tint(LightAqua)
                         else ColorFilter.tint(Aqua),
                         modifier = Modifier
-                            .size(25.dp)
+                            .size(30.dp)
                             .clickable {
-                                onEvent(ActivityEvent.SortActivities(sortType = SortType.YEAR_MONTH_DAY))
+                                onEvent(
+                                    ActivityEvent.SortActivities(
+                                        sortType = if (activityType == spending) SortType.SPENDING_YEAR_MONTH_DAY
+                                        else SortType.INCOME_YEAR_MONTH_DAY
+                                    )
+                                )
                                 chosenSortType = 0
                             }
                     )
                 }
-                Box(
+                Spacer(
                     modifier = Modifier
-                        .weight(1f),
-                    contentAlignment = Alignment.CenterEnd
-                ) {
+                        .weight(1f)
+                )
+                Box {
                     Text(
-                        "$currentYear",
+                        "$chosenYear",
                         style = Typography.h2,
                         modifier = Modifier
                             .clickable{
@@ -111,7 +123,12 @@ fun SpendingContent(
                     )
                     DropdownMenu(
                         expanded = isDropDownVisible,
-                        onDismissRequest = { isDropDownVisible = false }
+                        onDismissRequest = { isDropDownVisible = false },
+                        modifier = Modifier
+                            .background(Background)
+                            .clip(RoundedCornerShape(10.dp))
+                            .border(2.dp, Aqua, RoundedCornerShape(10.dp)),
+
                     ) {
                         state.years.forEach {
                             DropdownMenuItem(onClick = {
@@ -130,52 +147,49 @@ fun SpendingContent(
             if(state.isAddingActivity) {
                 AddActivityDialog(
                     state = state,
-                    activityType = spending,
+                    activityType = activityType,
                     language = language,
                     onEvent = onEvent
                 )
             }
-
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 30.dp)
+                    .padding(top = 35.dp)
                     .horizontalScroll(rememberScrollState()),
             ) {
                 items(state.activities) { activity ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .combinedClickable(
-                                onClick = {},
-                                onLongClick = {
-                                    onEvent(ActivityEvent.ShowEditDeleteDialog)
-                                }
+                    if (activity.year == chosenYear && activity.type == activityType) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .combinedClickable(
+                                    onClick = {},
+                                    onLongClick = {
+                                        onEvent(ActivityEvent.ShowEditDeleteDialog)
+                                    }
+                                )
+                        ) {
+                            Text(text =
+                            if (activity.month < 10) {"${activity.day}.0${activity.month}: " +
+                                    "${activity.amount} ${activity.title}"}
+                            else {"${activity.day}.${activity.month}: " +
+                                    "${activity.amount} ${activity.title}"},
+                                style = Typography.body1
                             )
-                    ) {
-                        Text(text =
-                                if (activity.month < 10) {"${activity.day}.0${activity.month}: " +
-                                "${activity.amount} ${activity.title}"}
-                                else {"${activity.day}.${activity.month}: " +
-                                        "${activity.amount} ${activity.title}"},
-                            style = Typography.body1
-                        )
-                        Text(
-                            " ${activity.source}",
-                            style = Typography.body1,
-                            color = when(activity.source) {
-                                'R' -> Color.Blue
-                                'G' -> Color.Red
-                                else -> Color.Green
-                            },
-//                        if (activity.source == 'R') Color.Blue
-//                        else if (activity.source == 'G') Color.Red
-//                        else Color.Green
-                        )
+                            Text(
+                                " ${activity.source}",
+                                style = Typography.body1,
+                                color = when(activity.source) {
+                                    'R' -> Color.Blue
+                                    'G' -> Color.Red
+                                    else -> Color.Green
+                                },
+                            )
+                        }
                     }
                 }
             }
         }
-
     }
 }

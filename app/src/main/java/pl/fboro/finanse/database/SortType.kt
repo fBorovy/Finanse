@@ -1,6 +1,8 @@
 package pl.fboro.finanse.database
 
 enum class SortType {
-    YEAR_MONTH_DAY,
-    AMOUNT,
+    SPENDING_YEAR_MONTH_DAY,
+    SPENDING_AMOUNT,
+    INCOME_YEAR_MONTH_DAY,
+    INCOME_AMOUNT,
 }

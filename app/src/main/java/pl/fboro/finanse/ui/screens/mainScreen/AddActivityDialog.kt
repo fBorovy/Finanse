@@ -204,8 +204,7 @@ fun AddActivityDialog(
                                 'G' -> onEvent(ActivityEvent.SetSource('G'))
                                 'B' -> onEvent(ActivityEvent.SetSource('B'))
                             }
-                            if (activityType == spending) onEvent(ActivityEvent.SetType(spending))
-                            else onEvent(ActivityEvent.SetType(income))
+                            onEvent(ActivityEvent.SetType(activityType))
                             onEvent(ActivityEvent.SaveActivity)
                         }
                         .border(1.dp, Aqua, RoundedCornerShape(10.dp))

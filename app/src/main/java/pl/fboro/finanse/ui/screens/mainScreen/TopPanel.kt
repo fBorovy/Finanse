@@ -24,6 +24,9 @@ import androidx.navigation.NavController
 import androidx.navigation.navOptions
 import pl.fboro.finanse.*
 import pl.fboro.finanse.R
+import pl.fboro.finanse.database.ActivityEvent
+import pl.fboro.finanse.database.ActivityState
+import pl.fboro.finanse.database.SortType
 import pl.fboro.finanse.ui.theme.Aqua
 import pl.fboro.finanse.ui.theme.TextWhite
 import pl.fboro.finanse.ui.theme.Typography
@@ -31,7 +34,9 @@ import pl.fboro.finanse.ui.theme.Typography
 @Composable
 fun TopPanel(
     language: Int,
-    changeActivity: (String) -> Unit,
+    state: ActivityState,
+    onEvent: (ActivityEvent) -> Unit,
+    changeActivity: (Int) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -48,7 +53,10 @@ fun TopPanel(
                     .shadow(5.dp)
                     .background(Aqua)
                     .clickable {
-                        changeActivity("spendings")
+                        changeActivity(spending)
+                        if (state.sortType == SortType.SPENDING_YEAR_MONTH_DAY || state.sortType == SortType.INCOME_YEAR_MONTH_DAY)
+                        onEvent(ActivityEvent.SortActivities(SortType.SPENDING_YEAR_MONTH_DAY))
+                        else onEvent(ActivityEvent.SortActivities(SortType.SPENDING_AMOUNT))
                     }
                     .padding(vertical = 10.dp)
                     .weight(1f),
@@ -65,7 +73,10 @@ fun TopPanel(
                     .clip(RoundedCornerShape(15.dp))
                     .background(Aqua)
                     .clickable {
-                        changeActivity("incomes")
+                        changeActivity(income)
+                        if (state.sortType == SortType.SPENDING_YEAR_MONTH_DAY || state.sortType == SortType.INCOME_YEAR_MONTH_DAY)
+                            onEvent(ActivityEvent.SortActivities(SortType.INCOME_YEAR_MONTH_DAY))
+                        else onEvent(ActivityEvent.SortActivities(SortType.INCOME_AMOUNT))
                     }
                     .padding(10.dp)
                     .weight(1f),
@@ -82,7 +93,7 @@ fun TopPanel(
                     .shadow(5.dp)
                     .background(Aqua)
                     .clickable {
-                        changeActivity("investments")
+                        changeActivity(investment)
                     }
                     .padding(10.dp)
                     .weight(1f),

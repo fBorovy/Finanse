@@ -5,11 +5,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import pl.fboro.finanse.currentDay
-import pl.fboro.finanse.currentMonth
-import pl.fboro.finanse.currentYear
+import pl.fboro.finanse.*
 import pl.fboro.finanse.database.*
-import pl.fboro.finanse.spending
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ActivityViewModel(
@@ -17,20 +14,14 @@ class ActivityViewModel(
 ): ViewModel() {
 
     private val _years = dao.getYearsRange()
-    private val _sortType = MutableStateFlow(SortType.YEAR_MONTH_DAY)
+    private val _sortType = MutableStateFlow(SortType.SPENDING_YEAR_MONTH_DAY)
     private val _activities = _sortType
         .flatMapLatest { sortType ->
             when(sortType){
-                SortType.YEAR_MONTH_DAY -> {
-//                    if (activityType == 0) dao.getSpendingsOrderedByDate()
-//                    else dao.getIncomesOrderedByDate()
-                    dao.getSpendingsOrderedByDate()
-                }
-                SortType.AMOUNT -> {
-//                    if (activityType == 0) dao.getSpendingsOrderedByAmount()
-//                    else dao.getIncomesOrderedByAmount()
-                    dao.getSpendingsOrderedByAmount()
-                }
+                SortType.SPENDING_YEAR_MONTH_DAY -> dao.getSpendingsOrderedByDate()
+                SortType.SPENDING_AMOUNT -> dao.getSpendingsOrderedByAmount()
+                SortType.INCOME_YEAR_MONTH_DAY -> dao.getIncomesOrderedByDate()
+                SortType.INCOME_AMOUNT -> dao.getIncomesOrderedByAmount()
             }
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
@@ -43,14 +34,8 @@ class ActivityViewModel(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ActivityState())
 
-
     fun onEvent(event: ActivityEvent) {
         when(event) {
-//            is ActivityEvent.SetYears -> {
-//                _state.update { it.copy(
-//                    years = dao.getYearsRange()
-//                ) }
-//            }
             is ActivityEvent.DeleteActivity -> {
                 viewModelScope.launch {
                     dao.deleteActivity(event.activity)
@@ -66,6 +51,7 @@ class ActivityViewModel(
                 val amount = state.value.amount
                 val title = state.value.title
                 val source = state.value.source
+                val type = state.value.type
 
                 if (day == 0 || month == 0 || year == 0 || amount == 0.0 || title.isBlank()){
                     return
@@ -78,7 +64,7 @@ class ActivityViewModel(
                     amount = amount,
                     title = title,
                     source = source,
-                    type = spending,
+                    type = type,
                 )
                 viewModelScope.launch {
                     dao.upsertActivity(activity)

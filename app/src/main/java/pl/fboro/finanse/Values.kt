@@ -7,6 +7,7 @@ const val polish = 1
 
 const val spending = 0
 const val income = 1
+const val investment = 2
 
 val spendings = listOf("Spendings", "Wydatki")
 val incomes = listOf("Incomes", "Dochody")
@@ -37,4 +38,3 @@ val currentYear = calendar.get(Calendar.YEAR)
 val currentMonth = calendar.get(Calendar.MONTH) + 1
 val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
 //val currentDate = Date(year, month, day)
-

@@ -10,8 +10,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import pl.fboro.finanse.database.ActivityEvent
 import pl.fboro.finanse.database.ActivityState
+import pl.fboro.finanse.database.SortType
+import pl.fboro.finanse.income
+import pl.fboro.finanse.spending
 import pl.fboro.finanse.ui.screens.mainScreen.OptionsBar
-import pl.fboro.finanse.ui.screens.mainScreen.SpendingContent
+import pl.fboro.finanse.ui.screens.mainScreen.ActivitiesContent
 import pl.fboro.finanse.ui.screens.mainScreen.TopPanel
 import pl.fboro.finanse.ui.theme.Background
 
@@ -23,8 +26,7 @@ fun MainScreen(
     language: Int,
     changeLanguage: (Int) -> Unit
 ) {
-    var chosenActivity by remember{mutableStateOf("spendings")}
-
+    var chosenActivity by remember { mutableStateOf(spending) }
 
     Column(
         modifier = Modifier
@@ -35,13 +37,23 @@ fun MainScreen(
         OptionsBar(navController = navController, language = language){
             changeLanguage(it)
         }
-        TopPanel(language = language) {
+        TopPanel(
+            language = language,
+            state = state,
+            onEvent = onEvent
+        ) {
             chosenActivity = it
         }
-        SpendingContent(
-            state = state,
-            onEvent = onEvent,
-            language = language,
-        )
+
+        if (chosenActivity == spending || chosenActivity == income) {
+            ActivitiesContent(
+                state = state,
+                onEvent = onEvent,
+                language = language,
+                activityType = chosenActivity,
+            )
+        }
+        else {}
+
     }
 }
