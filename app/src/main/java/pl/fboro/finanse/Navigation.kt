@@ -6,12 +6,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import pl.fboro.finanse.database.ActivityEvent
 import pl.fboro.finanse.database.ActivityState
+import pl.fboro.finanse.database.InvestmentState
 import pl.fboro.finanse.ui.screens.GreetScreen
 import pl.fboro.finanse.ui.screens.MainScreen
 
 @Composable
 fun Navigation(
     state: ActivityState,
+    investmentState: InvestmentState,
     onEvent: (ActivityEvent) -> Unit,
 ) {
     val navController = rememberNavController()
@@ -26,7 +28,7 @@ fun Navigation(
         composable(
             route = Screen.MainScreen.name
         ) {
-            MainScreen(navController, state, onEvent, language) {
+            MainScreen(navController, state, investmentState, onEvent, language) {
                 language = it
             }
         }

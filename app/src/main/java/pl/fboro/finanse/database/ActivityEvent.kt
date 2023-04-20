@@ -22,16 +22,19 @@ sealed interface ActivityEvent{
     data class DeleteActivity(val activity: Activity): ActivityEvent
 
     object SaveInvestment: ActivityEvent
-    data class SetIDay(val day: Int): ActivityEvent
-    data class SetIMonth(val month: Int): ActivityEvent
-    data class SetIYear(val year: Int): ActivityEvent
-    data class SetInvestedIn(val amount: Double): ActivityEvent
-    data class SetTakenOut(val amount: Double): ActivityEvent
-    data class SetDifference(val amount: Double): ActivityEvent
+    data class SetIDay(val iDay: Int): ActivityEvent
+    data class SetIMonth(val iMonth: Int): ActivityEvent
+    data class SetIYear(val iYear: Int): ActivityEvent
+    data class SetInvestedIn(val investedIn: Double): ActivityEvent
+    data class SetTakenOut(val takenOut: Double): ActivityEvent
+    data class SetDifference(val difference: Double): ActivityEvent
 
     object ShowAddingInvestmentDialog: ActivityEvent
     object ShowEditDeleteInvestmentDialog: ActivityEvent
 
     object HideAddingInvestmentDialog: ActivityEvent
     object HideEditDeleteInvestmentDialog: ActivityEvent
+
+    data class SortInvestments(val investmentSortType: InvestmentSortType): ActivityEvent
+    data class DeleteInvestment(val investment: Investment): ActivityEvent
 }

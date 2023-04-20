@@ -23,6 +23,7 @@ val dollarIconDesc = listOf("Amount", "Kwota")
 val calendarIconDesc = listOf("Date", "Data")
 val addSpendingDialogTitle = listOf("Add spending", "Dodaj wydatek")
 val addIncomeDialogTitle = listOf("Add income", "Dodaj dochód")
+val addInvestmentDialogTitle = listOf("Add investment", "Dodaj inwestycję")
 val saveButton = listOf("Save", "Zapisz")
 val cancelButton = listOf("Cancel", "Anuluj")
 

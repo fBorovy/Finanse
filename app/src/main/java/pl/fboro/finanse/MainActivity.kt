@@ -36,7 +36,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             FinanseTheme {
                 val state by viewModel.state.collectAsState()
-                Navigation(state = state, onEvent = viewModel::onEvent)
+                val investmentState by viewModel.investmentState.collectAsState()
+                Navigation(
+                    state = state,
+                    investmentState = investmentState,
+                    onEvent = viewModel::onEvent
+                )
             }
         }
     }

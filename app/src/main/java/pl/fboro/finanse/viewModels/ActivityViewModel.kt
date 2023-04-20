@@ -34,6 +34,28 @@ class ActivityViewModel(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ActivityState())
 
+
+    private val _investmentYears = dao.getInvestmentYearsRange()
+    private val _investmentSortType = MutableStateFlow(InvestmentSortType.DATE)
+    private val _investments = _investmentSortType
+        .flatMapLatest{ sortType ->
+            when(sortType) {
+                InvestmentSortType.DATE -> dao.getInvestmentsOrderedByTime()
+                InvestmentSortType.PROFIT -> dao.getInvestmentsOrderedByProfitAmount()
+            }
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+    private val _investmentState = MutableStateFlow(InvestmentState())
+    val investmentState = combine(_investmentState, _investmentSortType, _investments, _investmentYears) { state, sortType, investments, years ->
+        state.copy(
+            investments = investments,
+            sortType = sortType,
+            years = years,
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), InvestmentState())
+
+
+
     fun onEvent(event: ActivityEvent) {
         when(event) {
             is ActivityEvent.DeleteActivity -> {
@@ -120,21 +142,78 @@ class ActivityViewModel(
                     year = event.year
                 ) }
             }
-//            is ActivityEvent.SaveInvestment -> {
-//
-//            }
-//            ActivityEvent.HideAddingInvestmentDialog -> TODO()
-//            ActivityEvent.HideEditDeleteDialog -> TODO()
-//            ActivityEvent.HideEditDeleteInvestmentDialog -> TODO()
-//            is ActivityEvent.SetDifference -> TODO()
-//            is ActivityEvent.SetIDay -> TODO()
-//            is ActivityEvent.SetIMonth -> TODO()
-//            is ActivityEvent.SetIYear -> TODO()
-//            is ActivityEvent.SetInvestedIn -> TODO()
-//            is ActivityEvent.SetTakenOut -> TODO()
-//            ActivityEvent.ShowAddingInvestmentDialog -> TODO()
-//            ActivityEvent.ShowEditDeleteDialog -> TODO()
-//            ActivityEvent.ShowEditDeleteInvestmentDialog -> TODO()
+
+            is ActivityEvent.DeleteInvestment -> {
+                viewModelScope.launch {
+                    dao.deleteInvestment(event.investment)
+                }
+            }
+            ActivityEvent.HideEditDeleteDialog -> TODO()
+            ActivityEvent.ShowEditDeleteDialog -> TODO()
+
+            //investments
+
+            ActivityEvent.HideAddingInvestmentDialog -> _investmentState.update { it.copy(
+                isAddingInvestment = false
+            ) }
+            ActivityEvent.HideEditDeleteInvestmentDialog -> TODO()
+            ActivityEvent.SaveInvestment -> {
+                val day = investmentState.value.day
+                val month = investmentState.value.month
+                val year = investmentState.value.year
+                val investedIn = investmentState.value.investedIn
+                val takenOut = investmentState.value.takenOut
+                val difference = investmentState.value.difference
+
+                if (day == 0 || month == 0 || year == 0 || investedIn == 0.0){
+                    return
+                }
+
+                val investment = Investment(
+                    id = 0,
+                    day = day,
+                    month = month,
+                    year = year,
+                    investedIn = investedIn,
+                    takenOut = takenOut,
+                    difference = difference,
+                )
+                viewModelScope.launch {
+                    dao.upsertInvestment(investment)
+                }
+                _investmentState.update { it.copy(
+                        isAddingInvestment = false,
+                        day = currentDay,
+                        month = currentMonth,
+                        year = currentYear,
+                        investedIn = 0.0,
+                        takenOut = 0.0,
+                        difference = 0.0,
+                ) }
+            }
+            is ActivityEvent.SetDifference -> _investmentState.update { it.copy(
+                difference = event.difference
+            ) }
+            is ActivityEvent.SetIDay -> _investmentState.update {it.copy(
+                day = event.iDay
+            )}
+            is ActivityEvent.SetIMonth -> _investmentState.update {it.copy(
+                month = event.iMonth
+            )}
+            is ActivityEvent.SetIYear -> _investmentState.update {it.copy(
+                year = event.iYear
+            )}
+            is ActivityEvent.SetInvestedIn -> _investmentState.update {it.copy(
+                investedIn = event.investedIn
+            )}
+            is ActivityEvent.SetTakenOut -> _investmentState.update {it.copy(
+                takenOut = event.takenOut
+            )}
+            ActivityEvent.ShowAddingInvestmentDialog -> _investmentState.update { it.copy(
+                isAddingInvestment = true
+            ) }
+            ActivityEvent.ShowEditDeleteInvestmentDialog -> TODO()
+            is ActivityEvent.SortInvestments -> _investmentSortType.value = event.investmentSortType
         }
     }
 }

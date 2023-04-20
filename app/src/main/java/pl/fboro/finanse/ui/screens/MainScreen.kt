@@ -10,10 +10,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import pl.fboro.finanse.database.ActivityEvent
 import pl.fboro.finanse.database.ActivityState
+import pl.fboro.finanse.database.InvestmentState
 import pl.fboro.finanse.income
 import pl.fboro.finanse.spending
 import pl.fboro.finanse.ui.screens.mainScreen.OptionsBar
 import pl.fboro.finanse.ui.screens.mainScreen.ActivitiesContent
+import pl.fboro.finanse.ui.screens.mainScreen.InvestmentsContent
 import pl.fboro.finanse.ui.screens.mainScreen.TopPanel
 import pl.fboro.finanse.ui.theme.Background
 
@@ -21,6 +23,7 @@ import pl.fboro.finanse.ui.theme.Background
 fun MainScreen(
     navController: NavController,
     state: ActivityState,
+    investmentState: InvestmentState,
     onEvent: (ActivityEvent) -> Unit,
     language: Int,
     changeLanguage: (Int) -> Unit
@@ -52,7 +55,11 @@ fun MainScreen(
                 activityType = chosenActivity,
             )
         }
-        else {}//InvestmentsContent()
+        else InvestmentsContent(
+            state = investmentState,
+            onEvent = onEvent,
+            language = language,
+        )
 
     }
 }
