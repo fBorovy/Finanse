@@ -157,23 +157,25 @@ class ActivityViewModel(
                 isAddingInvestment = false
             ) }
             ActivityEvent.HideEditDeleteInvestmentDialog -> TODO()
+
             ActivityEvent.SaveInvestment -> {
                 val day = investmentState.value.day
                 val month = investmentState.value.month
                 val year = investmentState.value.year
+                val instrument = investmentState.value.instrument
                 val investedIn = investmentState.value.investedIn
                 val takenOut = investmentState.value.takenOut
                 val difference = investmentState.value.difference
 
-                if (day == 0 || month == 0 || year == 0 || investedIn == 0.0){
+                if (day == 0 || month == 0 || year == 0 || instrument.isBlank() || investedIn == 0.0){
                     return
                 }
 
                 val investment = Investment(
-                    id = 0,
                     day = day,
                     month = month,
                     year = year,
+                    instrument = instrument,
                     investedIn = investedIn,
                     takenOut = takenOut,
                     difference = difference,
@@ -186,6 +188,7 @@ class ActivityViewModel(
                         day = currentDay,
                         month = currentMonth,
                         year = currentYear,
+                        instrument = "",
                         investedIn = 0.0,
                         takenOut = 0.0,
                         difference = 0.0,
@@ -214,6 +217,9 @@ class ActivityViewModel(
             ) }
             ActivityEvent.ShowEditDeleteInvestmentDialog -> TODO()
             is ActivityEvent.SortInvestments -> _investmentSortType.value = event.investmentSortType
+            is ActivityEvent.SetInstrument -> _investmentState.update { it.copy(
+                instrument = event.instrument
+            ) }
         }
     }
 }

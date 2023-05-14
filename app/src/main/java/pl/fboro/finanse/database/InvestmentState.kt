@@ -10,6 +10,7 @@ data class InvestmentState(
     val day: Int = currentDay,
     val month: Int = currentMonth,
     val year: Int = currentYear,
+    val instrument: String = "",
     val investedIn: Double = 0.0,
     val takenOut: Double = 0.0,
     val difference: Double = 0.0,

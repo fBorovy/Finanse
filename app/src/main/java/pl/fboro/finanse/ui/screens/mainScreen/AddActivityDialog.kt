@@ -177,7 +177,7 @@ fun AddActivityDialog(
                 Box(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(start = 30.dp, end = 15.dp,)
+                        .padding(start = 30.dp, end = 15.dp)
                         .clickable {
                             onEvent(ActivityEvent.HideAddingDialog)
                         }

@@ -25,6 +25,7 @@ sealed interface ActivityEvent{
     data class SetIDay(val iDay: Int): ActivityEvent
     data class SetIMonth(val iMonth: Int): ActivityEvent
     data class SetIYear(val iYear: Int): ActivityEvent
+    data class SetInstrument(val instrument: String): ActivityEvent
     data class SetInvestedIn(val investedIn: Double): ActivityEvent
     data class SetTakenOut(val takenOut: Double): ActivityEvent
     data class SetDifference(val difference: Double): ActivityEvent

@@ -23,7 +23,7 @@ import pl.fboro.finanse.ui.theme.*
 
 @Composable
 fun AddInvestmentDialog(
-    state: InvestmentState,
+    investmentState: InvestmentState,
     language: Int,
     modifier: Modifier = Modifier,
     onEvent: (ActivityEvent) -> Unit,
@@ -32,9 +32,11 @@ fun AddInvestmentDialog(
         var day by remember { mutableStateOf("$currentDay") }
         var month by remember { mutableStateOf("$currentMonth") }
         var year by remember { mutableStateOf("$currentYear") }
-        var amountIn by remember { mutableStateOf(" ") }
-        var amountOut by remember { mutableStateOf(" ") }
-        var difference by remember { mutableStateOf(0.0) }
+        var amountIn by remember { mutableStateOf(0.0) }
+         var amountInString by remember { mutableStateOf("") }
+        var amountOut by remember { mutableStateOf(0.0) }
+         var amountOutString by remember { mutableStateOf("") }
+         var difference by remember { mutableStateOf(0.0) }
 
 
         AlertDialog(
@@ -94,36 +96,67 @@ fun AddInvestmentDialog(
                         label = { Text(text = yearPlaceHolder[language], color = TextWhite) },
                     )
                     OutlinedTextField(
-                        value = amountIn,
+                        value = investmentState.instrument,
                         colors = TextFieldDefaults.outlinedTextFieldColors(
                             focusedBorderColor = LightAqua,
                             unfocusedBorderColor = Aqua,
                             textColor = TextWhite),
                         onValueChange = {
-                            amountIn = it
-                            difference = amountOut.toDouble() - amountIn.toDouble()
+                            onEvent(ActivityEvent.SetInstrument(it))
+                        },
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                        label = {Text(text = instrumentPlaceHolder[language], color = TextWhite)},
+                    )
+                    OutlinedTextField(value = amountInString,
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = LightAqua,
+                            unfocusedBorderColor = Aqua,
+                            textColor = TextWhite),
+                        onValueChange = {
+                            amountInString = it
+                            if (it.isNotEmpty()) {
+                                amountIn = it.toDouble()
+                                difference = amountOut - amountIn
+                            }
                         },
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Number,
                             imeAction = ImeAction.Next,
                         ),
-                        label = { Text(text = amountPlaceHolder[language], color = TextWhite) },
+                        label = { Text(text = amountInPlaceHolder[language], color = TextWhite) },
                     )
                     OutlinedTextField(
-                        value = amountOut,
+                        value = amountOutString,
                         colors = TextFieldDefaults.outlinedTextFieldColors(
                             focusedBorderColor = LightAqua,
                             unfocusedBorderColor = Aqua,
                             textColor = TextWhite),
                         onValueChange = {
-                            amountOut = it
+                            amountOutString = it
+                            if (it.isNotEmpty()) {
+                                amountOut = it.toDouble()
+                                difference = amountOut - amountIn
+                            }
                         },
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                        label = { Text(text = titlePlaceHolder[language], color = TextWhite) },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Done,
+                        ),
+                        label = { Text(text = amountOutPlaceHolder[language], color = TextWhite) },
                     )
-                    Text(
-                        text = difference.toString()
-                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 10.dp)
+                            .clip(RoundedCornerShape(5.dp))
+                            .border(1.dp, Aqua)
+                            .padding(5.dp),
+                        contentAlignment = Alignment.Center
+                    ){
+                        Text(
+                            text = investmentResult[language] + ": " + difference.toString()
+                        )
+                    }
                 }
             },
             buttons = {
@@ -135,7 +168,7 @@ fun AddInvestmentDialog(
                     Box(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(start = 30.dp, end = 15.dp,)
+                            .padding(start = 30.dp, end = 15.dp)
                             .clickable {
                                 onEvent(ActivityEvent.HideAddingInvestmentDialog)
                             }
@@ -155,8 +188,8 @@ fun AddInvestmentDialog(
                                 onEvent(ActivityEvent.SetIDay(day.toInt()))
                                 onEvent(ActivityEvent.SetIMonth(month.toInt()))
                                 onEvent(ActivityEvent.SetIYear(year.toInt()))
-                                onEvent(ActivityEvent.SetInvestedIn(amountIn.toDouble()))
-                                onEvent(ActivityEvent.SetTakenOut(amountOut.toDouble()))
+                                onEvent(ActivityEvent.SetInvestedIn(amountIn))
+                                onEvent(ActivityEvent.SetTakenOut(amountOut))
                                 onEvent(ActivityEvent.SetDifference(difference))
                                 onEvent(ActivityEvent.SaveInvestment)
                             }

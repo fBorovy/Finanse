@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
             applicationContext,
             ActivityDatabase::class.java,
             "activities.db",
-        ).addMigrations(ActivityDatabase.migration1To2).build()
+        ).build()
     }
 
     private val viewModel by viewModels<ActivityViewModel>(
@@ -31,6 +31,8 @@ class MainActivity : ComponentActivity() {
             }
         }
     )
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

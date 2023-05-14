@@ -56,7 +56,7 @@ fun MainScreen(
             )
         }
         else InvestmentsContent(
-            state = investmentState,
+            investmentState = investmentState,
             onEvent = onEvent,
             language = language,
         )

@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -25,7 +26,7 @@ import pl.fboro.finanse.ui.theme.Typography
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun InvestmentsContent(
-    state: InvestmentState,
+    investmentState: InvestmentState,
     onEvent: (ActivityEvent) -> Unit,
     language: Int,
 ) {
@@ -115,7 +116,7 @@ fun InvestmentsContent(
                             .border(2.dp, Aqua, RoundedCornerShape(10.dp)),
 
                         ) {
-                        state.years.forEach {
+                        investmentState.years.forEach {
                             DropdownMenuItem(onClick = {
                                 chosenYear = it
                                 isDropDownVisible = false
@@ -129,23 +130,22 @@ fun InvestmentsContent(
                     }
                 }
             }
-//            if(state.isAddingInvestment) {
-//                AddActivityDialog(
-//                    state = state,
-//                    activityType = activityType,
-//                    language = language,
-//                    onEvent = onEvent
-//                )
-//            }
+            if(investmentState.isAddingInvestment) {
+                AddInvestmentDialog(
+                    investmentState = investmentState,
+                    language = language,
+                    onEvent = onEvent
+                )
+            }
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(top = 35.dp)
                     .horizontalScroll(rememberScrollState()),
             ) {
-                items(state.investments) { investment ->
+                items(investmentState.investments) { investment ->
                     if (investment.year == chosenYear) {
-                        Row(
+                        Column(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .combinedClickable(
@@ -155,22 +155,24 @@ fun InvestmentsContent(
                                     }
                                 )
                         ) {
-//                            Text(text =
-//                            if (activity.month < 10) {"${activity.day}.0${activity.month}: " +
-//                                    "${activity.amount} ${activity.title}"}
-//                            else {"${activity.day}.${activity.month}: " +
-//                                    "${activity.amount} ${activity.title}"},
-//                                style = Typography.body1
-//                            )
-//                            Text(
-//                                " ${activity.source}",
-//                                style = Typography.body1,
-//                                color = when(activity.source) {
-//                                    'R' -> Color.Blue
-//                                    'G' -> Color.Red
-//                                    else -> Color.Green
-//                                },
-//                            )
+                            Text(
+                                text = "${investment.investedIn} ${paidFor[language]}" +
+                                    " ${investment.instrument}\n${investment.takenOut} ${sold[language]}",
+                                style = Typography.body1
+                            )
+                            Row(
+                                modifier = Modifier.fillMaxWidth()
+                            ){
+                                Text(
+                                    text = if (investment.month < 10) "${investment.day}.0${investment.month}"
+                                        else "${investment.day}.0${investment.month}"
+                                )
+                                Text(
+                                    text = "\t\t${investment.difference}\n",
+                                    color = if (investment.difference >= 0) Color.Green else Color.Red,
+                                    style = Typography.body1
+                                )
+                            }
                         }
                     }
                 }
