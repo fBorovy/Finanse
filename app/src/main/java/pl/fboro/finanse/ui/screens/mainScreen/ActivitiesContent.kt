@@ -23,10 +23,7 @@ import pl.fboro.finanse.R
 import pl.fboro.finanse.database.ActivityEvent
 import pl.fboro.finanse.database.ActivityState
 import pl.fboro.finanse.database.SortType
-import pl.fboro.finanse.ui.theme.Aqua
-import pl.fboro.finanse.ui.theme.Background
-import pl.fboro.finanse.ui.theme.LightAqua
-import pl.fboro.finanse.ui.theme.Typography
+import pl.fboro.finanse.ui.theme.*
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -181,7 +178,7 @@ fun ActivitiesContent(
                                 " ${activity.source}",
                                 style = Typography.body1,
                                 color = when(activity.source) {
-                                    'R' -> Color.Blue
+                                    'R' -> Revo
                                     'G' -> Color.Red
                                     else -> Color.Green
                                 },

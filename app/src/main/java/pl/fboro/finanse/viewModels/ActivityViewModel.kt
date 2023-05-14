@@ -67,13 +67,13 @@ class ActivityViewModel(
                 isAddingActivity = false
             ) }
             is ActivityEvent.SaveActivity -> {
-                val day = state.value.day
-                val month = state.value.month
-                val year = state.value.year
-                val amount = state.value.amount
-                val title = state.value.title
-                val source = state.value.source
-                val type = state.value.type
+                val day = _state.value.day
+                val month = _state.value.month
+                val year = _state.value.year
+                val amount = _state.value.amount
+                val title = _state.value.title
+                val source = _state.value.source
+                val type = _state.value.type
 
                 if (day == 0 || month == 0 || year == 0 || amount == 0.0 || title.isBlank()){
                     return
@@ -159,15 +159,16 @@ class ActivityViewModel(
             ActivityEvent.HideEditDeleteInvestmentDialog -> TODO()
 
             ActivityEvent.SaveInvestment -> {
-                val day = investmentState.value.day
-                val month = investmentState.value.month
-                val year = investmentState.value.year
-                val instrument = investmentState.value.instrument
-                val investedIn = investmentState.value.investedIn
-                val takenOut = investmentState.value.takenOut
-                val difference = investmentState.value.difference
+                val day = _investmentState.value.day
+                val month = _investmentState.value.month
+                val year = _investmentState.value.year
+                val instrument = _investmentState.value.instrument
+                val investedIn = _investmentState.value.investedIn
+                val takenOut = _investmentState.value.takenOut
+                val difference = _investmentState.value.difference
 
-                if (day == 0 || month == 0 || year == 0 || instrument.isBlank() || investedIn == 0.0){
+                if (day == 0 || month == 0 || year == 0 || instrument.isBlank()
+                    || investedIn == 0.0 ){
                     return
                 }
 
