@@ -8,8 +8,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -78,7 +76,7 @@ fun ActivitiesContent(
                                 onEvent(
                                     ActivityEvent.SortActivities(
                                         sortType = if (activityType == spending) SortType.SPENDING_AMOUNT
-                                                    else SortType.INCOME_AMOUNT
+                                        else SortType.INCOME_AMOUNT
                                     )
                                 )
                                 chosenSortType = 1
@@ -150,6 +148,7 @@ fun ActivitiesContent(
                     onEvent = onEvent
                 )
             }
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -174,7 +173,7 @@ fun ActivitiesContent(
                                     .combinedClickable(
                                         onClick = {},
                                         onLongClick = {
-                                            onEvent(ActivityEvent.ShowEditDeleteDialog)
+                                            onEvent(ActivityEvent.DeleteActivity(activity))
                                         }
                                     )
                             ) {

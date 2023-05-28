@@ -15,13 +15,13 @@ sealed interface ActivityEvent{
     object ShowAddingDialog: ActivityEvent
     object HideAddingDialog: ActivityEvent
 
-    object ShowEditDeleteDialog: ActivityEvent
-    object HideEditDeleteDialog: ActivityEvent
+    data class ShowDeleteDialog(val activity: Activity): ActivityEvent
+    object HideDeleteDialog: ActivityEvent
 
     data class SortActivities(val sortType: SortType): ActivityEvent
     data class DeleteActivity(val activity: Activity): ActivityEvent
 
-    object SaveInvestment: ActivityEvent
+    object SaveInvestment : ActivityEvent
     data class SetIDay(val iDay: Int): ActivityEvent
     data class SetIMonth(val iMonth: Int): ActivityEvent
     data class SetIYear(val iYear: Int): ActivityEvent
@@ -31,10 +31,10 @@ sealed interface ActivityEvent{
     data class SetDifference(val difference: Double): ActivityEvent
 
     object ShowAddingInvestmentDialog: ActivityEvent
-    object ShowEditDeleteInvestmentDialog: ActivityEvent
+    object ShowDeleteInvestmentDialog: ActivityEvent
 
     object HideAddingInvestmentDialog: ActivityEvent
-    object HideEditDeleteInvestmentDialog: ActivityEvent
+    object HideDeleteInvestmentDialog: ActivityEvent
 
     data class SortInvestments(val investmentSortType: InvestmentSortType): ActivityEvent
     data class DeleteInvestment(val investment: Investment): ActivityEvent

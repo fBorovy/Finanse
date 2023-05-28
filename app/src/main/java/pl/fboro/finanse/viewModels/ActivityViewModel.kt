@@ -148,15 +148,20 @@ class ActivityViewModel(
                     dao.deleteInvestment(event.investment)
                 }
             }
-            ActivityEvent.HideEditDeleteDialog -> TODO()
-            ActivityEvent.ShowEditDeleteDialog -> TODO()
+            ActivityEvent.HideDeleteDialog -> _state.update { it.copy(
+                isDeletingActivity = false
+            ) }
+            is ActivityEvent.ShowDeleteDialog -> _state.update { it.copy(
+                isDeletingActivity = true
+            ) }
+
 
             //investments
 
             ActivityEvent.HideAddingInvestmentDialog -> _investmentState.update { it.copy(
                 isAddingInvestment = false
             ) }
-            ActivityEvent.HideEditDeleteInvestmentDialog -> TODO()
+            ActivityEvent.HideDeleteInvestmentDialog -> TODO()
 
             ActivityEvent.SaveInvestment -> {
                 val day = _investmentState.value.day
@@ -216,7 +221,7 @@ class ActivityViewModel(
             ActivityEvent.ShowAddingInvestmentDialog -> _investmentState.update { it.copy(
                 isAddingInvestment = true
             ) }
-            ActivityEvent.ShowEditDeleteInvestmentDialog -> TODO()
+            ActivityEvent.ShowDeleteInvestmentDialog -> TODO()
             is ActivityEvent.SortInvestments -> _investmentSortType.value = event.investmentSortType
             is ActivityEvent.SetInstrument -> _investmentState.update { it.copy(
                 instrument = event.instrument

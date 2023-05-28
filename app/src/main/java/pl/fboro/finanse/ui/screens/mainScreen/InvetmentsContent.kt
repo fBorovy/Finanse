@@ -151,7 +151,7 @@ fun InvestmentsContent(
                                 .combinedClickable(
                                     onClick = {},
                                     onLongClick = {
-                                        onEvent(ActivityEvent.ShowEditDeleteInvestmentDialog)
+                                        onEvent(ActivityEvent.ShowDeleteInvestmentDialog)
                                     }
                                 )
                         ) {

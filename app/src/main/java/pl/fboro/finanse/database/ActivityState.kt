@@ -16,6 +16,7 @@ data class ActivityState(
     val source: Char = 'R',
     val type: Int = 0,
     val isAddingActivity: Boolean = false,
+    val isDeletingActivity: Boolean = false,
     val sortType: SortType = SortType.SPENDING_YEAR_MONTH_DAY,
     val years: List<Int> = listOf(currentYear),
 )
