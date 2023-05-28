@@ -25,6 +25,7 @@ import pl.fboro.finanse.database.ActivityState
 import pl.fboro.finanse.database.SortType
 import pl.fboro.finanse.ui.theme.*
 
+@Suppress("OPT_IN_IS_NOT_ENABLED")
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ActivitiesContent(
@@ -155,34 +156,52 @@ fun ActivitiesContent(
                     .padding(top = 35.dp)
                     .horizontalScroll(rememberScrollState()),
             ) {
+                var previousMonth = state.activities[0].month
+                var sum = 0.0
                 items(state.activities) { activity ->
                     if (activity.year == chosenYear && activity.type == activityType) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .combinedClickable(
-                                    onClick = {},
-                                    onLongClick = {
-                                        onEvent(ActivityEvent.ShowEditDeleteDialog)
-                                    }
+                        Column(modifier = Modifier.fillMaxWidth())
+                        {
+                            if (chosenSortType == 0 && activity.month != previousMonth) {
+                                Text(
+                                    text = "\n\n${monthTotal[language]} $sum\n\n"
                                 )
-                        ) {
-                            Text(text =
-                            if (activity.month < 10) {"${activity.day}.0${activity.month}: " +
-                                    "${activity.amount} ${activity.title}"}
-                            else {"${activity.day}.${activity.month}: " +
-                                    "${activity.amount} ${activity.title}"},
-                                style = Typography.body1
-                            )
-                            Text(
-                                " ${activity.source}",
-                                style = Typography.body1,
-                                color = when(activity.source) {
-                                    'R' -> Revo
-                                    'G' -> Color.Red
-                                    else -> Color.Green
-                                },
-                            )
+                                sum = 0.0
+                            }
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .combinedClickable(
+                                        onClick = {},
+                                        onLongClick = {
+                                            onEvent(ActivityEvent.ShowEditDeleteDialog)
+                                        }
+                                    )
+                            ) {
+                                Text(text =
+                                if (activity.month < 10) {"${activity.day}.0${activity.month}: " +
+                                        "${activity.amount} ${activity.title}"}
+                                else {"${activity.day}.${activity.month}: " +
+                                        "${activity.amount} ${activity.title}"},
+                                    style = Typography.body1
+                                )
+                                Text(
+                                    " ${activity.source}",
+                                    style = Typography.body1,
+                                    color = when(activity.source) {
+                                        'R' -> Revo
+                                        'G' -> Color.Red
+                                        else -> Color.Green
+                                    },
+                                )
+                            }
+                            previousMonth = activity.month
+                            sum += activity.amount
+                            if (state.activities.indexOf(activity) == state.activities.lastIndex && chosenSortType == 0) {
+                                Text(
+                                    text = "\n\n${monthTotal[language]} $sum\n\n"
+                                )
+                            }
                         }
                     }
                 }

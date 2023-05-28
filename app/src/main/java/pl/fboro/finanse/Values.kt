@@ -38,6 +38,7 @@ val amountOutPlaceHolder = listOf("Result amount", "Zwrot z inwestycji")
 val investmentResult = listOf("Result", "Wynik")
 val paidFor = listOf("I've paid for", "zapłaciłem za")
 val sold = listOf("I got", "wyciągnąłem")
+val monthTotal = listOf("Month total: ", "Razem w miesiącu: ")
 
 val calendar: Calendar = Calendar.getInstance()
 val currentYear = calendar.get(Calendar.YEAR)
