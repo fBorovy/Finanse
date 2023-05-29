@@ -155,13 +155,13 @@ fun ActivitiesContent(
                     .padding(top = 35.dp)
                     .horizontalScroll(rememberScrollState()),
             ) {
-                var previousMonth = state.activities[0].month
+                var previousMonth = 0//state.activities[0].month
                 var sum = 0.0
                 items(state.activities) { activity ->
                     if (activity.year == chosenYear && activity.type == activityType) {
                         Column(modifier = Modifier.fillMaxWidth())
                         {
-                            if (chosenSortType == 0 && activity.month != previousMonth) {
+                            if (chosenSortType == 0 && activity.month != previousMonth && previousMonth != 0) {
                                 Text(
                                     text = "\n\n${monthTotal[language]} $sum\n\n"
                                 )
@@ -194,13 +194,15 @@ fun ActivitiesContent(
                                     },
                                 )
                             }
-                            previousMonth = activity.month
                             sum += activity.amount
-                            if (state.activities.indexOf(activity) == state.activities.lastIndex && chosenSortType == 0) {
+                            if (state.activities.indexOf(activity) == state.activities.lastIndex
+                                || previousMonth != activity.month && chosenSortType == 0) {
                                 Text(
                                     text = "\n\n${monthTotal[language]} $sum\n\n"
                                 )
+                                sum = 0.0
                             }
+                            previousMonth = activity.month
                         }
                     }
                 }

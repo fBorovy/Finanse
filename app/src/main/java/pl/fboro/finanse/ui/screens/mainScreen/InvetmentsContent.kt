@@ -18,10 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import pl.fboro.finanse.*
 import pl.fboro.finanse.database.*
-import pl.fboro.finanse.ui.theme.Aqua
-import pl.fboro.finanse.ui.theme.Background
-import pl.fboro.finanse.ui.theme.LightAqua
-import pl.fboro.finanse.ui.theme.Typography
+import pl.fboro.finanse.ui.theme.*
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -143,15 +140,17 @@ fun InvestmentsContent(
                     .padding(top = 35.dp)
                     .horizontalScroll(rememberScrollState()),
             ) {
+                var result = 0.0
                 items(investmentState.investments) { investment ->
                     if (investment.year == chosenYear) {
+                        result += investment.difference
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .combinedClickable(
                                     onClick = {},
                                     onLongClick = {
-                                        onEvent(ActivityEvent.ShowDeleteInvestmentDialog)
+                                        onEvent(ActivityEvent.DeleteInvestment(investment))
                                     }
                                 )
                         ) {
@@ -173,6 +172,21 @@ fun InvestmentsContent(
                                     style = Typography.body1
                                 )
                             }
+                        }
+                    }
+                    if (investmentState.investments.lastIndex
+                        == investmentState.investments.indexOf(investment)) {
+                        Row{
+                            Text(
+                                text = "\n${investmentYearTotal[language]}",
+                                style = Typography.h1,
+                                color = TextWhite
+                            )
+                            Text(
+                                text = "\n$result",
+                                style = Typography.h1,
+                                color = if (result >= 0) Color.Green else Color.Red
+                            )
                         }
                     }
                 }
