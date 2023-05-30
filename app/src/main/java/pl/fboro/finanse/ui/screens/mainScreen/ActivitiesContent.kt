@@ -155,16 +155,26 @@ fun ActivitiesContent(
                     .padding(top = 35.dp)
                     .horizontalScroll(rememberScrollState()),
             ) {
-                var previousMonth = 0//state.activities[0].month
+                var previousMonth = 0
                 var sum = 0.0
                 items(state.activities) { activity ->
                     if (activity.year == chosenYear && activity.type == activityType) {
                         Column(modifier = Modifier.fillMaxWidth())
                         {
-                            if (chosenSortType == 0 && activity.month != previousMonth && previousMonth != 0) {
-                                Text(
-                                    text = "\n\n${monthTotal[language]} $sum\n\n"
-                                )
+                            if (previousMonth != activity.month && previousMonth != 0
+                                && chosenSortType == 0) {
+                                Row{
+                                    Text(
+                                        text = "\n${monthTotal[language]}\n",
+                                        style = Typography.h1,
+                                        color = TextWhite
+                                    )
+                                    Text(
+                                        text = "\n $sum\n",
+                                        style = Typography.h1,
+                                        color = if (activityType == 0) Color.Red else Color.Green
+                                    )
+                                }
                                 sum = 0.0
                             }
                             Row(
@@ -194,16 +204,27 @@ fun ActivitiesContent(
                                     },
                                 )
                             }
-                            sum += activity.amount
-                            if (state.activities.indexOf(activity) == state.activities.lastIndex
-                                || previousMonth != activity.month && chosenSortType == 0) {
-                                Text(
-                                    text = "\n\n${monthTotal[language]} $sum\n\n"
-                                )
-                                sum = 0.0
-                            }
                             previousMonth = activity.month
+                            sum += activity.amount
+                            if (state.activities.lastIndex == state.activities.indexOf(activity)
+                                && chosenSortType == 0) {
+                                Row{
+                                    Text(
+                                        text = "\n${monthTotal[language]}\n",
+                                        style = Typography.h1,
+                                        color = TextWhite
+                                    )
+                                    Text(
+                                        text = "\n $sum\n",
+                                        style = Typography.h1,
+                                        color = if (activityType == 0) Color.Red else Color.Green
+                                    )
+                                }
+                                sum = 0.0
+                                previousMonth = 0
+                            }
                         }
+
                     }
                 }
             }
