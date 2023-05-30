@@ -9,14 +9,10 @@ sealed interface ActivityEvent{
     data class SetAmount(val amount: Double): ActivityEvent
     data class SetTitle(val title: String): ActivityEvent
     data class SetSource(val source: Char): ActivityEvent
-
     data class SetType(val type: Int): ActivityEvent
 
     object ShowAddingDialog: ActivityEvent
     object HideAddingDialog: ActivityEvent
-
-    data class ShowDeleteDialog(val activity: Activity): ActivityEvent
-    object HideDeleteDialog: ActivityEvent
 
     data class SortActivities(val sortType: SortType): ActivityEvent
     data class DeleteActivity(val activity: Activity): ActivityEvent
@@ -31,10 +27,8 @@ sealed interface ActivityEvent{
     data class SetDifference(val difference: Double): ActivityEvent
 
     object ShowAddingInvestmentDialog: ActivityEvent
-    object ShowDeleteInvestmentDialog: ActivityEvent
 
     object HideAddingInvestmentDialog: ActivityEvent
-    object HideDeleteInvestmentDialog: ActivityEvent
 
     data class SortInvestments(val investmentSortType: InvestmentSortType): ActivityEvent
     data class DeleteInvestment(val investment: Investment): ActivityEvent

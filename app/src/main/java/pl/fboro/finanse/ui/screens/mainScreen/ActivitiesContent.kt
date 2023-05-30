@@ -101,7 +101,7 @@ fun ActivitiesContent(
                                     )
                                 )
                                 chosenSortType = 0
-                            }
+                            },
                     )
                 }
                 Spacer(
@@ -115,7 +115,7 @@ fun ActivitiesContent(
                         modifier = Modifier
                             .clickable{
                                 isDropDownVisible = !isDropDownVisible
-                            }
+                            },
                     )
                     DropdownMenu(
                         expanded = isDropDownVisible,
@@ -224,7 +224,6 @@ fun ActivitiesContent(
                                 previousMonth = 0
                             }
                         }
-
                     }
                 }
             }
