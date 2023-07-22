@@ -22,13 +22,16 @@ val sort = listOf("Sort by: ", "Sortuj po: ")
 val dollarIconDesc = listOf("Amount", "Kwota")
 val calendarIconDesc = listOf("Date", "Data")
 val addSpendingDialogTitle = listOf("Add spending", "Dodaj wydatek")
-val DeleteSpendingDialogTitle = listOf("Edit spending", "Edytuj wydatek")
 val addIncomeDialogTitle = listOf("Add income", "Dodaj dochód")
-val DeleteIncomeDialogTitle = listOf("Edit income", "Edytuj dochód")
 val addInvestmentDialogTitle = listOf("Add investment", "Dodaj inwestycję")
 val saveButton = listOf("Save", "Zapisz")
 val cancelButton = listOf("Cancel", "Anuluj")
-val deleteButton = listOf("Delete", "Usuń")
+val month = arrayOf<String>(
+    "January ", "February ", "March ", "April ", "May ", "June ",
+    "July ", "August ", "September ", "October ", "November ", "December ",
+    "Styczeń ", "Luty ", "Marzec ", "Kwiecień ", "Maj ", "Czerwiec ",
+    "Lipiec ", "Sierpień ", "Wrzesień ", "Październik ", "Listopad ", "Grudzień "
+)
 
 val dayPlaceHolder = listOf("Day", "Dzień")
 val monthPlaceHolder = listOf("Month", "Miesiąc")

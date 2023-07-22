@@ -2,8 +2,6 @@ package pl.fboro.finanse.ui.screens.mainScreen
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -22,6 +20,7 @@ import pl.fboro.finanse.database.ActivityEvent
 import pl.fboro.finanse.database.ActivityState
 import pl.fboro.finanse.database.SortType
 import pl.fboro.finanse.ui.theme.*
+import kotlin.math.roundToInt
 
 @Suppress("OPT_IN_IS_NOT_ENABLED")
 @OptIn(ExperimentalFoundationApi::class)
@@ -33,8 +32,10 @@ fun ActivitiesContent(
     activityType: Int,
 ) {
     var chosenSortType by remember{ mutableStateOf(0) }
-    var isDropDownVisible by remember { mutableStateOf(false) }
+    var isYearDropDownVisible by remember { mutableStateOf(false) }
+    var isMonthDropDownVisible by remember { mutableStateOf(false) }
     var chosenYear by remember { mutableStateOf(currentYear) }
+    var chosenMonth by remember { mutableStateOf(currentMonth) }
 
     Scaffold(
         modifier = Modifier
@@ -71,7 +72,7 @@ fun ActivitiesContent(
                         colorFilter = if (chosenSortType == 1) ColorFilter.tint(LightAqua)
                         else ColorFilter.tint(Aqua),
                         modifier = Modifier
-                            .size(30.dp)
+                            .size(24.dp)
                             .clickable {
                                 onEvent(
                                     ActivityEvent.SortActivities(
@@ -92,7 +93,7 @@ fun ActivitiesContent(
                         colorFilter = if (chosenSortType == 0) ColorFilter.tint(LightAqua)
                         else ColorFilter.tint(Aqua),
                         modifier = Modifier
-                            .size(30.dp)
+                            .size(24.dp)
                             .clickable {
                                 onEvent(
                                     ActivityEvent.SortActivities(
@@ -108,28 +109,57 @@ fun ActivitiesContent(
                     modifier = Modifier
                         .weight(1f)
                 )
+                Box{
+                    Text(
+                        text = if (language == 0) month[chosenMonth - 1] else month[chosenMonth + 11],
+                        style = Typography.h2,
+                        modifier = Modifier
+                            .clickable{
+                                isMonthDropDownVisible = !isMonthDropDownVisible
+                            },
+                    )
+                    DropdownMenu(
+                        expanded = isMonthDropDownVisible,
+                        onDismissRequest = { isMonthDropDownVisible = false },
+                        modifier = Modifier
+                            .background(Background)
+                            .clip(RoundedCornerShape(10.dp))
+                            .border(2.dp, Aqua, RoundedCornerShape(10.dp)),
+                    ) {
+                        for (i in 0..11) {
+                            DropdownMenuItem(onClick = {
+                                chosenMonth = i + 1
+                                isMonthDropDownVisible = false
+                            }) {
+                                Text(
+                                    text = if (language == 0) month[i] else month[i+12],
+                                    style = Typography.h2,
+                                )
+                            }
+                        }
+                    }
+                }
                 Box {
                     Text(
                         "$chosenYear",
                         style = Typography.h2,
                         modifier = Modifier
                             .clickable{
-                                isDropDownVisible = !isDropDownVisible
+                                isYearDropDownVisible = !isYearDropDownVisible
                             },
                     )
                     DropdownMenu(
-                        expanded = isDropDownVisible,
-                        onDismissRequest = { isDropDownVisible = false },
+                        expanded = isYearDropDownVisible,
+                        onDismissRequest = { isYearDropDownVisible = false },
                         modifier = Modifier
                             .background(Background)
                             .clip(RoundedCornerShape(10.dp))
                             .border(2.dp, Aqua, RoundedCornerShape(10.dp)),
-
                     ) {
                         state.years.forEach {
                             DropdownMenuItem(onClick = {
                                 chosenYear = it
-                                isDropDownVisible = false
+                                isYearDropDownVisible = false
                             }) {
                                 Text(
                                     "$it",
@@ -149,34 +179,19 @@ fun ActivitiesContent(
                 )
             }
 
-            LazyColumn(
+            var sum = 0.0
+
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(top = 35.dp)
-                    .horizontalScroll(rememberScrollState()),
+                    .verticalScroll(rememberScrollState()),
             ) {
-                var previousMonth = 0
-                var sum = 0.0
-                items(state.activities) { activity ->
-                    if (activity.year == chosenYear && activity.type == activityType) {
+                for (activity in state.activities) {
+                    if (activity.year == chosenYear && activity.month == chosenMonth
+                        && activity.type == activityType) {
                         Column(modifier = Modifier.fillMaxWidth())
                         {
-                            if (previousMonth != activity.month && previousMonth != 0
-                                && chosenSortType == 0) {
-                                Row{
-                                    Text(
-                                        text = "\n${monthTotal[language]}\n",
-                                        style = Typography.h1,
-                                        color = TextWhite
-                                    )
-                                    Text(
-                                        text = "\n $sum\n",
-                                        style = Typography.h1,
-                                        color = if (activityType == 0) Color.Red else Color.Green
-                                    )
-                                }
-                                sum = 0.0
-                            }
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -204,27 +219,22 @@ fun ActivitiesContent(
                                     },
                                 )
                             }
-                            previousMonth = activity.month
                             sum += activity.amount
-                            if (state.activities.lastIndex == state.activities.indexOf(activity)
-                                && chosenSortType == 0) {
-                                Row{
-                                    Text(
-                                        text = "\n${monthTotal[language]}\n",
-                                        style = Typography.h1,
-                                        color = TextWhite
-                                    )
-                                    Text(
-                                        text = "\n $sum\n",
-                                        style = Typography.h1,
-                                        color = if (activityType == 0) Color.Red else Color.Green
-                                    )
-                                }
-                                sum = 0.0
-                                previousMonth = 0
-                            }
                         }
                     }
+                }
+                if (chosenSortType == 0) {
+                    val roundOff = (sum * 100.0).roundToInt() / 100.0
+                    Text(
+                        text = "\n${monthTotal[language]}",
+                        style = Typography.h1,
+                        color = TextWhite
+                    )
+                    Text(
+                        text = "$roundOff\n",
+                        style = Typography.h1,
+                        color = if (activityType == 0) Color.Red else Color.Green
+                    )
                 }
             }
         }
