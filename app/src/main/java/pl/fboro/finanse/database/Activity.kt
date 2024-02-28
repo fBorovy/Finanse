@@ -1,5 +1,6 @@
 package pl.fboro.finanse.database
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -14,4 +15,6 @@ data class Activity(
     val title: String,
     val source: Char,
     val type: Int,
+    @ColumnInfo(name = "currency", defaultValue = "0")
+    val currency: Int,
 )

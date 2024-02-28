@@ -5,7 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -16,6 +16,7 @@ import pl.fboro.finanse.database.ActivityEvent
 import pl.fboro.finanse.database.ActivityState
 import pl.fboro.finanse.database.SortType
 import pl.fboro.finanse.ui.theme.Aqua
+import pl.fboro.finanse.ui.theme.LightAqua
 import pl.fboro.finanse.ui.theme.Typography
 
 @Composable
@@ -25,6 +26,8 @@ fun TopPanel(
     onEvent: (ActivityEvent) -> Unit,
     changeActivity: (Int) -> Unit,
 ) {
+    var activity by remember{mutableStateOf(0)}
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -38,11 +41,12 @@ fun TopPanel(
                     .padding(horizontal = 5.dp)
                     .clip(RoundedCornerShape(15.dp))
                     .shadow(5.dp)
-                    .background(Aqua)
+                    .background(if (activity == spending) Aqua else LightAqua)
                     .clickable {
+                        activity = spending
                         changeActivity(spending)
                         if (state.sortType == SortType.SPENDING_YEAR_MONTH_DAY || state.sortType == SortType.INCOME_YEAR_MONTH_DAY)
-                        onEvent(ActivityEvent.SortActivities(SortType.SPENDING_YEAR_MONTH_DAY))
+                            onEvent(ActivityEvent.SortActivities(SortType.SPENDING_YEAR_MONTH_DAY))
                         else onEvent(ActivityEvent.SortActivities(SortType.SPENDING_AMOUNT))
                     }
                     .padding(vertical = 10.dp)
@@ -56,10 +60,11 @@ fun TopPanel(
             Box(
                 modifier = Modifier
                     .padding(horizontal = 5.dp)
-                    .shadow(5.dp)
                     .clip(RoundedCornerShape(15.dp))
-                    .background(Aqua)
+                    .shadow(5.dp)
+                    .background(if (activity == income) Aqua else LightAqua)
                     .clickable {
+                        activity = income
                         changeActivity(income)
                         if (state.sortType == SortType.SPENDING_YEAR_MONTH_DAY || state.sortType == SortType.INCOME_YEAR_MONTH_DAY)
                             onEvent(ActivityEvent.SortActivities(SortType.INCOME_YEAR_MONTH_DAY))
@@ -78,8 +83,9 @@ fun TopPanel(
                     .padding(horizontal = 5.dp)
                     .clip(RoundedCornerShape(15.dp))
                     .shadow(5.dp)
-                    .background(Aqua)
+                    .background(if (activity == investment) Aqua else LightAqua)
                     .clickable {
+                        activity = investment
                         changeActivity(investment)
                     }
                     .padding(10.dp)

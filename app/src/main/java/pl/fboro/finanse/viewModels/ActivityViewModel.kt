@@ -25,6 +25,7 @@ class ActivityViewModel(
             }
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+
     private val _state = MutableStateFlow(ActivityState())
     val state = combine(_state, _sortType, _activities, _years) { state, sortType, activities, years ->
         state.copy(
@@ -74,6 +75,7 @@ class ActivityViewModel(
                 val title = _state.value.title
                 val source = _state.value.source
                 val type = _state.value.type
+                val currency = _state.value.currency
 
                 if (day == 0 || month == 0 || year == 0 || amount == 0.0 || title.isBlank()){
                     return
@@ -87,6 +89,7 @@ class ActivityViewModel(
                     title = title,
                     source = source,
                     type = type,
+                    currency = currency,
                 )
                 viewModelScope.launch {
                     dao.upsertActivity(activity)
@@ -143,14 +146,19 @@ class ActivityViewModel(
                 ) }
             }
 
+            is ActivityEvent.SetCurrency -> {
+                _state.update { it.copy(
+                    currency = event.currency
+                )}
+            }
+
+            //investments
+
             is ActivityEvent.DeleteInvestment -> {
                 viewModelScope.launch {
                     dao.deleteInvestment(event.investment)
                 }
             }
-
-
-            //investments
 
             ActivityEvent.HideAddingInvestmentDialog -> _investmentState.update { it.copy(
                 isAddingInvestment = false

@@ -7,10 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,13 +16,10 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import org.intellij.lang.annotations.Language
 import pl.fboro.finanse.Screen
 import pl.fboro.finanse.greeting
-import pl.fboro.finanse.polish
 import pl.fboro.finanse.ui.theme.Aqua
-import pl.fboro.finanse.ui.theme.Background
-import pl.fboro.finanse.ui.theme.TextWhite
+import pl.fboro.finanse.ui.theme.TopPanelBackground
 
 @Composable
 fun GreetScreen(navController: NavController, language: Int) {
@@ -32,7 +27,7 @@ fun GreetScreen(navController: NavController, language: Int) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Background)
+            .background(TopPanelBackground)
             .padding(horizontal = 25.dp),
         contentAlignment = Center
     ) {
@@ -51,7 +46,7 @@ fun GreetScreen(navController: NavController, language: Int) {
             Text(
                 text = greeting[language],
                 fontSize = 40.sp,
-                color = Background,
+                color = TopPanelBackground,
             )
         }
 

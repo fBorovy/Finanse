@@ -9,10 +9,13 @@ const val spending = 0
 const val income = 1
 const val investment = 2
 
+const val pln = 0
+const val euro = 1
+
 val spendings = listOf("Spendings", "Wydatki")
 val incomes = listOf("Incomes", "Dochody")
 val investments = listOf("Investments", "Inwestycje")
-val greeting = listOf("Welcome\n\t\t\t\t to finance", "Witaj\n\t\t\t\t w finansach")
+val greeting = listOf("Welcome\n\t\t\t\t to finances", "Witaj\n\t\t\t\t w finansach")
 
 val previousScreenIconDescription = listOf("return", "wróc")
 val polishImageDesc = listOf("polish language", "język polski")
@@ -42,10 +45,10 @@ val instrumentPlaceHolder = listOf("Instrument", "Instrument")
 val amountInPlaceHolder = listOf("Invested amount", "Zainwestowana kwota")
 val amountOutPlaceHolder = listOf("Result amount", "Zwrot z inwestycji")
 val investmentResult = listOf("Result", "Wynik")
-val paidFor = listOf("I've paid for", "zapłaciłem za")
-val sold = listOf("I got", "wyciągnąłem")
+val paidFor = listOf("paid for", "zapłaciłem za")
+val sold = listOf("selled for", "sprzedałem za")
 val monthTotal = listOf("Month total: ", "Razem w miesiącu: ")
-val investmentYearTotal = listOf("Year total: ", "Wynik: ")
+val investmentYearTotal = listOf("Year total: ", "Podsumowanie roczne: ")
 
 val calendar: Calendar = Calendar.getInstance()
 val currentYear = calendar.get(Calendar.YEAR)

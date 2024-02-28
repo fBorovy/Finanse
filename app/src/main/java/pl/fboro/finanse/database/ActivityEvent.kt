@@ -10,6 +10,7 @@ sealed interface ActivityEvent{
     data class SetTitle(val title: String): ActivityEvent
     data class SetSource(val source: Char): ActivityEvent
     data class SetType(val type: Int): ActivityEvent
+    data class SetCurrency(val currency: Int): ActivityEvent
 
     object ShowAddingDialog: ActivityEvent
     object HideAddingDialog: ActivityEvent

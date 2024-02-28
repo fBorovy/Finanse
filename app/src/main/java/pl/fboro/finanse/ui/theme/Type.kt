@@ -18,7 +18,7 @@ val Typography = Typography(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.SemiBold,
         fontSize = 18.sp,
-        color = Aqua,
+        color = TextAqua,
     ),
     body1 = TextStyle(
         fontFamily = FontFamily.Default,

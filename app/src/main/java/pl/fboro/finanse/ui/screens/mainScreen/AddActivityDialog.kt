@@ -5,7 +5,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -13,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import pl.fboro.finanse.*
 import pl.fboro.finanse.database.ActivityEvent
 import pl.fboro.finanse.database.ActivityState
@@ -34,6 +38,7 @@ fun AddActivityDialog(
     var month by remember { mutableStateOf("$currentMonth") }
     var year by remember { mutableStateOf("$currentYear") }
     var amount by remember { mutableStateOf(" ")}
+    var euro by remember { mutableStateOf(false) }
 
 
     AlertDialog(
@@ -82,7 +87,8 @@ fun AddActivityDialog(
                    colors = TextFieldDefaults.outlinedTextFieldColors(
                        focusedBorderColor = LightAqua,
                        unfocusedBorderColor = Aqua,
-                       textColor = TextWhite),
+                       textColor = TextWhite
+                   ),
                    onValueChange = {
                        year = it
                    },
@@ -92,21 +98,48 @@ fun AddActivityDialog(
                    ),
                    label = {Text(text = yearPlaceHolder[language], color = TextWhite)},
                )
-               OutlinedTextField(
-                   value = amount,
-                   colors = TextFieldDefaults.outlinedTextFieldColors(
-                       focusedBorderColor = LightAqua,
-                       unfocusedBorderColor = Aqua,
-                       textColor = TextWhite),
-                   onValueChange = {
-                       amount = it
-                   },
-                   keyboardOptions = KeyboardOptions(
-                       keyboardType = KeyboardType.Number,
-                       imeAction = ImeAction.Next,
-                   ),
-                   label = {Text(text = amountPlaceHolder[language], color = TextWhite)},
-               )
+               Row(
+                   verticalAlignment = Alignment.CenterVertically
+               ) {
+                   Box(Modifier.weight(5f)) {
+                       OutlinedTextField(
+                           value = amount,
+                           colors = TextFieldDefaults.outlinedTextFieldColors(
+                               focusedBorderColor = LightAqua,
+                               unfocusedBorderColor = Aqua,
+                               textColor = TextWhite),
+                           onValueChange = {
+                               amount = it
+                           },
+                           keyboardOptions = KeyboardOptions(
+                               keyboardType = KeyboardType.Number,
+                               imeAction = ImeAction.Next,
+                           ),
+                           label = {Text(text = amountPlaceHolder[language], color = TextWhite)},
+                       )
+                   }
+                   Box(
+                       Modifier
+                           .weight(1f)
+                           .padding(8.dp, 8.dp, 0.dp, 0.dp)
+                           .clickable{
+                                     euro = !euro
+                           }
+                           .border(
+                               width = 1.dp,
+                               color = Aqua,
+                               shape = RoundedCornerShape(4.dp)
+                           ),
+                       contentAlignment = Alignment.Center
+                   ) {
+                       Text(
+                           text = "€",
+                           Modifier.padding(vertical = 5.dp),
+                           color = if (euro) Aqua else TextGray,
+                           fontSize = 22.sp,
+                       )
+                   }
+               }
                OutlinedTextField(
                    value = state.title,
                    colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -204,6 +237,7 @@ fun AddActivityDialog(
                                 'B' -> onEvent(ActivityEvent.SetSource('B'))
                             }
                             onEvent(ActivityEvent.SetType(activityType))
+                            onEvent(ActivityEvent.SetCurrency(if (euro) 1 else 0))
                             onEvent(ActivityEvent.SaveActivity)
                         }
                         .border(1.dp, Aqua, RoundedCornerShape(10.dp))

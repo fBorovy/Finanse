@@ -18,8 +18,7 @@ import androidx.navigation.NavController
 import androidx.navigation.navOptions
 import pl.fboro.finanse.*
 import pl.fboro.finanse.R
-import pl.fboro.finanse.ui.theme.Aqua
-import pl.fboro.finanse.ui.theme.TextWhite
+import pl.fboro.finanse.ui.theme.LightAqua
 
 @Composable
 fun OptionsBar(
@@ -30,7 +29,7 @@ fun OptionsBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 7.dp, top = 7.dp)
+            .padding(bottom = 7.dp)
     ){
         Box(
             modifier = Modifier.weight(1f),
@@ -48,7 +47,7 @@ fun OptionsBar(
                                 popUpTo(Screen.Greeting.name) { inclusive = true }
                             })
                     },
-                tint = Aqua,
+                tint = LightAqua,
             )
         }
         Box() {

@@ -1,9 +1,7 @@
 package pl.fboro.finanse.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -13,11 +11,12 @@ import pl.fboro.finanse.database.ActivityState
 import pl.fboro.finanse.database.InvestmentState
 import pl.fboro.finanse.income
 import pl.fboro.finanse.spending
-import pl.fboro.finanse.ui.screens.mainScreen.OptionsBar
 import pl.fboro.finanse.ui.screens.mainScreen.ActivitiesContent
 import pl.fboro.finanse.ui.screens.mainScreen.InvestmentsContent
+import pl.fboro.finanse.ui.screens.mainScreen.OptionsBar
 import pl.fboro.finanse.ui.screens.mainScreen.TopPanel
 import pl.fboro.finanse.ui.theme.Background
+import pl.fboro.finanse.ui.theme.TopPanelBackground
 
 @Composable
 fun MainScreen(
@@ -34,17 +33,24 @@ fun MainScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(Background)
-            .padding(horizontal = 15.dp)
     ) {
-        OptionsBar(navController = navController, language = language){
-            changeLanguage(it)
-        }
-        TopPanel(
-            language = language,
-            state = state,
-            onEvent = onEvent
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(TopPanelBackground)
+                .padding(horizontal = 15.dp)
         ) {
-            chosenActivity = it
+            OptionsBar(navController = navController, language = language){
+                changeLanguage(it)
+            }
+            TopPanel(
+                language = language,
+                state = state,
+                onEvent = onEvent
+            ) {
+                chosenActivity = it
+            }
+            Spacer(modifier = Modifier.fillMaxWidth().height(15.dp))
         }
 
         if (chosenActivity == spending || chosenActivity == income) {
