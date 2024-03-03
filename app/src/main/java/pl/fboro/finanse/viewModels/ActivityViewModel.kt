@@ -19,9 +19,13 @@ class ActivityViewModel(
         .flatMapLatest { sortType ->
             when(sortType){
                 SortType.SPENDING_YEAR_MONTH_DAY -> dao.getSpendingsOrderedByDate()
+                SortType.SPENDING_YEAR_MONTH_DAY_ASC -> dao.getSpendingsOrderedByDateAsc()
                 SortType.SPENDING_AMOUNT -> dao.getSpendingsOrderedByAmount()
+                SortType.SPENDING_AMOUNT_ASC -> dao.getSpendingsOrderedByAmountAsc()
                 SortType.INCOME_YEAR_MONTH_DAY -> dao.getIncomesOrderedByDate()
+                SortType.INCOME_YEAR_MONTH_DAY_ASC -> dao.getIncomesOrderedByDateAsc()
                 SortType.INCOME_AMOUNT -> dao.getIncomesOrderedByAmount()
+                SortType.INCOME_AMOUNT_ASC -> dao.getIncomesOrderedByAmountAsc()
             }
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
@@ -42,7 +46,9 @@ class ActivityViewModel(
         .flatMapLatest{ sortType ->
             when(sortType) {
                 InvestmentSortType.DATE -> dao.getInvestmentsOrderedByTime()
+                InvestmentSortType.DATE_ASC -> dao.getInvestmentsOrderedByTimeAsc()
                 InvestmentSortType.PROFIT -> dao.getInvestmentsOrderedByProfitAmount()
+                InvestmentSortType.PROFIT_ASC -> dao.getInvestmentsOrderedByProfitAmountAsc()
             }
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())

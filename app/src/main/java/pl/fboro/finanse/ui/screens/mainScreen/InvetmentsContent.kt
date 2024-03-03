@@ -68,7 +68,10 @@ fun InvestmentsContent(
                         modifier = Modifier
                             .size(24.dp)
                             .clickable {
-                                onEvent(ActivityEvent.SortInvestments(investmentSortType = InvestmentSortType.DATE))
+                                if (investmentState.sortType == InvestmentSortType.DATE)
+                                    onEvent(ActivityEvent.SortInvestments(investmentSortType = InvestmentSortType.DATE_ASC))
+                                else
+                                    onEvent(ActivityEvent.SortInvestments(investmentSortType = InvestmentSortType.DATE))
                                 chosenSortType = 0
                             }
                     )
@@ -84,6 +87,9 @@ fun InvestmentsContent(
                         modifier = Modifier
                             .size(24.dp)
                             .clickable {
+                                if (investmentState.sortType == InvestmentSortType.PROFIT)
+                                    onEvent(ActivityEvent.SortInvestments(investmentSortType = InvestmentSortType.PROFIT_ASC))
+                                else
                                 onEvent(
                                     ActivityEvent.SortInvestments(investmentSortType = InvestmentSortType.PROFIT)
                                 )
