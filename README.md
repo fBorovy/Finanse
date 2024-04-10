@@ -1,8 +1,11 @@
 Finanse
-
 Tracking expenses, incomes and investments app. 
-
 Written fully in Kotlin using Jetpack Compose library with Room Database (SQLite) following MVVM architecture.
+
+Installation:
+Download the Finanse.zip file from the repository Releases tab. Extract the file and launch the installation on your Android device.
+or
+Clone the repository to your Android Studio and launch an app in the emulator.
 
 Screen 1
 ![image](https://github.com/fBorovy/Finanse/assets/106736389/08b4f653-53be-477e-a8ac-0ac22b683245) 
